@@ -1,121 +1,169 @@
 from __future__ import annotations
 
 import logging
-import zipfile
 from pathlib import Path
+from typing import Optional
 
 import requests
+from requests.exceptions import RequestException
 
-logging.basicConfig(level=logging.INFO)
+from ..exceptions import DownloadError
+from ..models import SCFMetadata
 
+# Constants
 SCF_DATA_URL = "https://www.federalreserve.gov/econres/files/"
-FIRST_YEAR = 1989
-LAST_YEAR = 2022
-INTERVAL = 3
-YEARS_IN_SCF = set(range(FIRST_YEAR, LAST_YEAR + 1, INTERVAL))
-FILE_TYPES = {"sas": ".zip", "stata": "s.zip", "csv": "excel.zip"}
+DATA_DIR = Path(__file__).parent / "data"
+FILE_TYPES = {
+    "stata": "s.zip",
+    "sas": "x.zip",
+    "csv": "csv.zip",
+}
 
-PKG_DIR = Path(__file__).resolve().parent
-DATA_DIR = PKG_DIR / "data"
-UNZIP_DIR = "_raw"
-ARCHIVE_DIR = "_zip"
-(DATA_DIR).mkdir(exist_ok=True)
-(DATA_DIR / UNZIP_DIR).mkdir(exist_ok=True)
-(DATA_DIR / ARCHIVE_DIR).mkdir(exist_ok=True)
+VALID_YEARS = range(1989, 2023, 3)  # SCF is triennial
 
 
-def check_year_file_type(year: int, file_type: str) -> bool:
-    if file_type not in FILE_TYPES:
-        msg = (
-            f"Invalid file type {file_type}. ",
-            "Expected 'sas', 'stata' or 'csv'.",
-        )
-        raise ValueError(msg)
+def setup_session() -> requests.Session:
+    """Set up requests session with appropriate headers."""
+    session = requests.Session()
+    session.headers.update(
+        {
+            "User-Agent": "fedsurvey/0.1.0",
+            "Accept": "application/zip",
+        },
+    )
+    return session
 
-    if year not in YEARS_IN_SCF:
-        msg = (
-            f"Invalid year {year}. Expected a year in the range "
-            f"{FIRST_YEAR}-{LAST_YEAR} in intervals of {INTERVAL}."
-        )
-        raise ValueError(msg)
+
+def download_year(year: int, file_type: str = "stata") -> Path:
+    """Download SCF data for a specific year.
+
+    Args:
+    ----
+        year: Survey year to download
+        file_type: Type of file to download ('stata', 'sas', or 'csv')
+
+    Returns:
+    -------
+        Path to the downloaded file
+
+    Raises:
+    ------
+        DownloadError: If download fails
+        ValueError: If year or file_type is invalid
+    """
+    try:
+        if year not in VALID_YEARS:
+            raise ValueError(
+                f"Invalid year: {year}. Must be one of {list(VALID_YEARS)}",
+            )
+
+        if file_type not in FILE_TYPES:
+            raise ValueError(
+                f"Invalid file type: {file_type}. Must be one of {list(FILE_TYPES.keys())}",
+            )
+
+        return save_year_zip(year, file_type)
+
+    except Exception as e:
+        raise DownloadError(f"Failed to download data for {year}: {e}") from e
 
 
 def save_year_zip(
     year: int,
     file_type: str = "stata",
-    save_dir: str | None = None,
-    session=None,
-):
-    file_name = f"scfp{year}{FILE_TYPES[file_type]}"
-    file_url = f"{SCF_DATA_URL}{file_name}"
-    zip_path = save_dir / ARCHIVE_DIR / file_name
+    save_dir: Optional[Path] = None,
+    session: Optional[requests.Session] = None,
+) -> Path:
+    """Download and save SCF data for a specific year.
 
-    # Check if the file already exists
-    if zip_path.exists():
-        logging.info(f"File {file_name} already exists. Skipping download.")
+    Args:
+    ----
+        year: Survey year to download
+        file_type: Type of file to download ('stata', 'sas', or 'csv')
+        save_dir: Directory to save the file (defaults to package data directory)
+        session: Requests session to use for download
 
-    else:
-        try:
-            response = session.get(file_url)
-            response.raise_for_status()
-            logging.info(f"File {file_name} has been downloaded successfully.")
-        except requests.exceptions.RequestException as err:
-            raise SystemExit(f"Failed to download scfp{file_name}: {err}")
+    Returns:
+    -------
+        Path to the downloaded file
 
-        with zip_path.open("wb") as f:
-            f.write(response.content)
-            logging.info(f"File {file_name} has been saved to the zip directory.")
-
-    return file_name
-
-
-def unzip_file(file_name, file_dir=None, save_dir=None):
-    local_file = file_dir / ARCHIVE_DIR / file_name
-    unzip_dir = save_dir / UNZIP_DIR
-    zip_file = unzip_dir / file_name
-
-    if zip_file.exists():
-        logging.info(f"File {file_name} already exists. Skipping extraction.")
-        return
-
+    Raises:
+    ------
+        DownloadError: If download or save operations fail
+        ValueError: If year or file_type is invalid
+    """
     try:
-        with zipfile.ZipFile(local_file, "r") as zip_ref:
-            zip_ref.extractall(unzip_dir)
+        # Validate year before attempting download
+        if year not in VALID_YEARS:
+            raise ValueError(
+                f"Invalid year: {year}. Must be one of {list(VALID_YEARS)}",
+            )
 
-        logging.info(f"File {file_name} has been extracted to the raw directory.")
+        if save_dir is None:
+            save_dir = DATA_DIR
+        save_dir.mkdir(parents=True, exist_ok=True)
 
-    except zipfile.BadZipFile as e:
-        logging.info(f"An error occurred while extracting {file_name}: {e}")
+        file_name = f"scfp{year}{FILE_TYPES[file_type]}"
+        save_path = save_dir / file_name
+
+        if save_path.exists():
+            logging.info(f"File already exists: {save_path}")
+            return save_path
+
+        session = session or setup_session()
+        url = f"{SCF_DATA_URL}{file_name}"
+
+        logging.info(f"Downloading {url} to {save_path}")
+        response = session.get(url, stream=True)
+        response.raise_for_status()
+
+        with save_path.open("wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+
+        # Create metadata
+        metadata = SCFMetadata(
+            year=year,
+            file_type=file_type,
+            record_count=0,  # This would be updated after processing
+        )
+
+        return save_path
+
+    except RequestException as e:
+        raise DownloadError(f"Failed to download {file_name}: {e}") from e
 
 
-def make_dirs(save_dir):
-    save_dir.mkdir(exist_ok=True)
-    (save_dir / UNZIP_DIR).mkdir(exist_ok=True)
-    (save_dir / ARCHIVE_DIR).mkdir(exist_ok=True)
-
-
-def download_year(
-    year: int,
+def download_all_years(
     file_type: str = "stata",
-    save_dir: str | None = None,
-    session=None,
-):
-    save_dir = DATA_DIR if save_dir is None else Path(save_dir).resolve()
-    make_dirs(save_dir)
+    years: Optional[list[int]] = None,
+) -> list[Path]:
+    """Download SCF data for multiple years.
 
-    check_year_file_type(year, file_type)
-    file_name = save_year_zip(year, file_type, session=session, save_dir=save_dir)
-    unzip_file(file_name, file_dir=save_dir, save_dir=save_dir)
+    Args:
+    ----
+        file_type: Type of file to download ('stata', 'sas', or 'csv')
+        years: List of years to download (defaults to all available years)
 
+    Returns:
+    -------
+        List of paths to downloaded files
 
-def download_all_years(file_type: str = "stata", save_dir: str | None = None):
-    save_dir = DATA_DIR if save_dir is None else Path(save_dir).resolve()
-    make_dirs(save_dir)
+    Raises:
+    ------
+        DownloadError: If any download fails
+    """
+    if years is None:
+        years = list(VALID_YEARS)
 
-    with requests.Session() as session:
-        for year in YEARS_IN_SCF:
-            download_year(year, file_type, session=session, save_dir=save_dir)
+    paths = []
+    session = setup_session()
 
+    for year in years:
+        try:
+            path = save_year_zip(year, file_type, session=session)
+            paths.append(path)
+        except Exception as e:
+            raise DownloadError(f"Failed to download data for {year}: {e}") from e
 
-if __name__ == "__main__":
-    download_all_years()
+    return paths

@@ -58,7 +58,10 @@ labels = [f"({i+1}-{i+5}]" for i in range(20, 95, 5)]
 
 # Create a new column 'age_lbl' with age groups
 scf_merged_labeled["age_lbl"] = pd.cut(
-    scf_merged["age"], bins=range(20, 100, 5), right=True, labels=labels
+    scf_merged["age"],
+    bins=range(20, 100, 5),
+    right=True,
+    labels=labels,
 )
 
 # Calculate 'equitfin', 'fininc', 'finmill', 'fillthou', 'incomemill', 'incomethou' in one line

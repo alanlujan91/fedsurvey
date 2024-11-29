@@ -1,82 +1,115 @@
+"""Module for merging SCF survey data files."""
+
 from __future__ import annotations
 
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from typing import Callable, Optional
 
+import numpy as np
 import pandas as pd
 
-logging.basicConfig(level=logging.INFO)
+from ..config import CHUNK_SIZE, DATA_DIR, MAX_WORKERS
+from ..models import SCFRecord
 
-FROM_ENDS = {"sas": "", "stata": ".dta", "csv": ".csv"}
-TO_ENDS = {"sas": ".sas7bdat", "stata": ".dta", "csv": ".csv", "pickle": ".pkl"}
-
-# Map file formats to their corresponding pandas read functions
-READ_FUNCS = {"stata": pd.read_stata, "csv": pd.read_csv, "sas": pd.read_sas}
-
-# Map file formats to their corresponding pandas write functions
-WRITE_FUNCS = {
-    "stata": pd.DataFrame.to_stata,
-    "csv": pd.DataFrame.to_csv,
-    "pickle": pd.DataFrame.to_pickle,
-}
+logger = logging.getLogger(__name__)
 
 
-def merge_files(from_format="stata", to_format="stata"):
-    # Get the directory of the current file
-    current_dir = Path(__file__).resolve().parent
-    raw_dir = current_dir / "data/_raw"
+class MergeError(Exception):
+    """Custom exception for merge-related errors."""
 
-    # Use Path.glob to find all files that start with 4 digits and end with the specified format
-    data_files = sorted(raw_dir.glob(f"*[0-9][0-9][0-9][0-9]{FROM_ENDS[from_format]}"))
 
-    if not data_files:
-        logging.info(f"No files found in {raw_dir.name} with format {from_format}")
-        return
+def process_file(
+    data_file: Path,
+    read_func: Callable[[str], pd.DataFrame],
+) -> Optional[pd.DataFrame]:
+    """Process a single SCF data file.
 
-    logging.info(
-        f"Found {len(data_files)} files in {raw_dir.name} with format {from_format}",
-    )
+    Args:
+    ----
+        data_file: Path to the data file
+        read_func: Function to read the data file
 
-    read_func = READ_FUNCS.get(from_format)
-    if not read_func:
-        logging.info(f"Unsupported input format: {from_format}")
-        return
+    Returns:
+    -------
+        Processed DataFrame or None if processing fails
 
-    # Use list comprehension to create df_list and concatenate all dataframes in the list
-    dfs = []
-    for data_file in data_files:
+    """
+    try:
+        logger.info(f"Processing {data_file.name}")
+        df = read_func(str(data_file)).assign(year=data_file.stem[-4:])
+
+        # Validate data
+        df_dict = df.to_dict("records")
+        validated_records = [SCFRecord(**record).dict() for record in df_dict]
+        return pd.DataFrame(validated_records)
+
+    except ValueError as e:
+        logger.warning(f"ValueError processing {data_file.name}: {e}")
         try:
-            df = read_func(str(data_file)).assign(year=data_file.stem[-4:])
-        except ValueError:
             df = read_func(str(data_file), convert_categoricals=False).assign(
                 year=data_file.stem[-4:],
             )
+            return df
         except Exception as e:
-            logging.info(f"Error reading file {data_file}: {e}")
-            continue
-        dfs.append(df)
+            logger.error(f"Failed to process {data_file.name}: {e}")
+            return None
+    except Exception as e:
+        logger.error(f"Unexpected error processing {data_file.name}: {e}")
+        return None
 
-    df = pd.concat(dfs, ignore_index=True)
 
-    logging.info(f"Successfully read {len(dfs)} files")
+def merge_files(
+    from_format: str = "stata",
+    to_format: str = "stata",
+    input_dir: Optional[Path] = None,
+    output_dir: Optional[Path] = None,
+) -> Path:
+    """Merge SCF data files from multiple years.
 
-    # Save the merged dataframe in the specified format
-    output_file = current_dir / f"data/_raw/scf_merged{TO_ENDS[to_format]}"
-    write_func = WRITE_FUNCS.get(to_format)
-    if write_func:
-        try:
-            if to_format == "csv":
-                write_func(df, str(output_file), index=False)
-            else:
-                write_func(df, str(output_file))
-        except Exception as e:
-            logging.info(f"Error writing file {output_file.name}: {e}")
-            return
-    else:
-        logging.info(f"Unsupported output format: {to_format}")
-        return
+    Args:
+    ----
+        from_format: Input file format
+        to_format: Output file format
+        input_dir: Directory containing input files
+        output_dir: Directory for output file
 
-    logging.info(f"Merged data saved to {output_file.name}")
+    Returns:
+    -------
+        Path to the merged file
+
+    """
+    input_dir = input_dir or DATA_DIR
+    output_dir = output_dir or DATA_DIR
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    data_files = sorted(input_dir.glob(f"*{from_format}*"))
+
+    # Process files in parallel
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        futures = [
+            executor.submit(process_file, data_file, pd.read_stata)
+            for data_file in data_files
+        ]
+        dfs = [f.result() for f in futures if f.result() is not None]
+
+    # Concatenate results
+    merged_df = pd.concat(dfs, ignore_index=True)
+
+    # Save in chunks
+    output_path = output_dir / f"scf_merged.{to_format}"
+    if to_format == "stata":
+        merged_df.to_stata(output_path, write_index=False)
+    elif to_format == "csv":
+        for i, chunk in enumerate(
+            np.array_split(merged_df, len(merged_df) // CHUNK_SIZE + 1),
+        ):
+            mode = "w" if i == 0 else "a"
+            header = i == 0
+            chunk.to_csv(output_path, mode=mode, header=header, index=False)
+
+    return output_path
 
 
 if __name__ == "__main__":
