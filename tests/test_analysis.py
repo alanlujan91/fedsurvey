@@ -18,13 +18,11 @@ from fedsurvey.analysis.trends import (
     wealth_mobility,
 )
 from fedsurvey.analysis.wealth import (
-    detailed_wealth_composition,
     wealth_composition,
 )
 from fedsurvey.exceptions import ProcessingError
 from fedsurvey.viz.distribution import (
     plot_racial_wealth_gap,
-    plot_wealth_composition_by_percentile,
     plot_wealth_composition_trends,
     plot_wealth_mobility_heatmap,
 )

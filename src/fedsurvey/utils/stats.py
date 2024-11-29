@@ -20,6 +20,7 @@ def weighted_quantile(values: np.ndarray, weights: np.ndarray, q: float) -> floa
     Returns:
     -------
         Weighted quantile value
+
     """
     if weights is None:
         weights = np.ones_like(values)
@@ -84,6 +85,7 @@ def weighted_mean(values: np.ndarray, weights: Optional[np.ndarray] = None) -> f
     Returns:
     -------
         Weighted mean value
+
     """
     if weights is None:
         return np.mean(values)
@@ -122,6 +124,7 @@ def weighted_std(values: np.ndarray, weights: Optional[np.ndarray] = None) -> fl
     Returns:
     -------
         Weighted standard deviation
+
     """
     if weights is None:
         return np.std(values)
@@ -164,6 +167,7 @@ def calculate_top_share(
     Returns:
     -------
         Share of total held by top share of population
+
     """
     if weights is None:
         weights = np.ones_like(values)

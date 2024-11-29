@@ -2,6 +2,14 @@
 
 from __future__ import annotations
 
+from ..utils.compute import compute_means, compute_medians
+from ..utils.stats import (
+    calculate_top_share,
+    gini_coefficient,
+    weighted_mean,
+    weighted_quantile,
+    weighted_std,
+)
 from .core import calculate_concentration, calculate_percentiles
 from .demographics import (
     intersectional_wealth_gap,
@@ -15,14 +23,6 @@ from .trends import (
     wealth_mobility,
 )
 from .wealth import detailed_wealth_composition, wealth_composition
-from ..utils.stats import (
-    calculate_top_share,
-    gini_coefficient,
-    weighted_mean,
-    weighted_quantile,
-    weighted_std,
-)
-from ..utils.compute import compute_means, compute_medians
 
 
 def wealth_shares(

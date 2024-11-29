@@ -18,7 +18,9 @@ def sample_income_data():
     # Generate correlated data for both years
     base_income = np.random.lognormal(8, 1, n // 2)
     end_income = base_income * np.random.lognormal(
-        0, 0.5, n // 2
+        0,
+        0.5,
+        n // 2,
     )  # Some mobility but correlated
 
     data = []

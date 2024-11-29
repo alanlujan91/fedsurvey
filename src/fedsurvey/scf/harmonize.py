@@ -22,12 +22,13 @@ def harmonize_variables(df: pd.DataFrame, year: int) -> pd.DataFrame:
     Raises:
     ------
         ProcessingError: If year is invalid or required columns missing
+
     """
     try:
         # Validate year first
         if year < 1989 or year > 2022:
             raise ProcessingError(
-                f"Invalid survey year: {year}. Must be between 1989 and 2022"
+                f"Invalid survey year: {year}. Must be between 1989 and 2022",
             )
 
         # Map raw SCF variables to standardized names based on bulletin.macro
@@ -61,7 +62,7 @@ def harmonize_variables(df: pd.DataFrame, year: int) -> pd.DataFrame:
         }
 
         # Check required columns exist
-        missing_cols = [col for col in VARIABLE_MAP.keys() if col not in df.columns]
+        missing_cols = [col for col in VARIABLE_MAP if col not in df.columns]
         if missing_cols:
             raise ProcessingError(f"Missing required columns: {missing_cols}")
 

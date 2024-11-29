@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import numpy as np
 import pandas as pd
 
 from ..exceptions import ProcessingError
@@ -26,6 +25,7 @@ def harmonize_race(df: pd.DataFrame, year: int) -> pd.DataFrame:
     Raises:
     ------
         ProcessingError: If year is invalid or required columns missing
+
     """
     try:
         if year < 1989 or year > 2022:

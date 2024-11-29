@@ -27,6 +27,7 @@ def calculate_finlit_score(df: pd.DataFrame) -> pd.DataFrame:
     Raises:
     ------
         ProcessingError: If required columns are missing
+
     """
     try:
         # Validate required columns

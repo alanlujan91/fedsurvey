@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import List, Optional
 
-import numpy as np
 import pandas as pd
 
 from ..exceptions import ProcessingError
@@ -29,6 +28,7 @@ def wealth_growth_rates(
     Returns:
     -------
         DataFrame with growth rates by year
+
     """
     try:
         growth = pd.DataFrame()
@@ -39,7 +39,9 @@ def wealth_growth_rates(
             for p in percentiles:
                 stats = df.groupby("year", observed=True)[measure].apply(
                     lambda x: weighted_quantile(
-                        x, df.loc[x.index, weight_col], p / 100
+                        x,
+                        df.loc[x.index, weight_col],
+                        p / 100,
                     ),
                     include_groups=False,
                 )
@@ -117,10 +119,14 @@ def wealth_mobility(
 
             # Create quantiles within each year
             base.loc[:, "quantile"] = pd.qcut(
-                base[measures[0]], n_quantiles, labels=False
+                base[measures[0]],
+                n_quantiles,
+                labels=False,
             )
             end.loc[:, "quantile"] = pd.qcut(
-                end[measures[0]], n_quantiles, labels=False
+                end[measures[0]],
+                n_quantiles,
+                labels=False,
             )
 
             # Create transition matrix
@@ -176,6 +182,7 @@ def mobility_analysis(
     Raises:
     ------
         ProcessingError: If years not found or insufficient data
+
     """
     try:
         # Get data for both years
@@ -184,7 +191,7 @@ def mobility_analysis(
 
         if len(base) == 0 or len(end) == 0:
             raise ProcessingError(
-                f"No data found for years {base_year} and/or {end_year}"
+                f"No data found for years {base_year} and/or {end_year}",
             )
 
         # Create wealth quantiles

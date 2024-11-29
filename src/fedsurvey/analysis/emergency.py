@@ -24,6 +24,7 @@ def analyze_emergency_preparedness(df: pd.DataFrame) -> pd.DataFrame:
     Raises:
     ------
         ProcessingError: If required columns are missing
+
     """
     try:
         df = df.copy()

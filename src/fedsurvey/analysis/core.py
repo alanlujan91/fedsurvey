@@ -47,6 +47,7 @@ def calculate_concentration(
     Returns:
     -------
         Dictionary with top share values
+
     """
     try:
         df = df.copy()

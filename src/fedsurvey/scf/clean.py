@@ -24,6 +24,7 @@ def harmonize_variables(df: pd.DataFrame, year: int) -> pd.DataFrame:
     Raises:
     ------
         ValueError: If year is invalid
+
     """
     if year < 1989 or year > 2022:
         raise ValueError(f"Invalid year: {year}. Must be between 1989 and 2022")
@@ -89,6 +90,7 @@ def adjust_for_inflation(
     Raises:
     ------
         ValueError: If year is not in CPI data
+
     """
     # CPI-U-RS values from bulletin.macro
     CPI_DATA = {
@@ -149,6 +151,7 @@ def apply_weights(
     Returns:
     -------
         DataFrame with weighted values
+
     """
     try:
         if value_cols is None:

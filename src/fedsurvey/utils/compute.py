@@ -17,6 +17,7 @@ def compute_means(group: pd.DataFrame) -> pd.DataFrame:
     Returns:
     -------
         DataFrame with weighted means
+
     """
     year = group["age_lbl"].iloc[0]
     race_lbl = group["race_lbl"].iloc[0]
@@ -68,6 +69,7 @@ def compute_medians(group: pd.DataFrame) -> pd.DataFrame:
     Returns:
     -------
         DataFrame with weighted medians
+
     """
     year = group["age_lbl"].iloc[0]
     race_lbl = group["race_lbl"].iloc[0]
@@ -103,17 +105,25 @@ def compute_medians(group: pd.DataFrame) -> pd.DataFrame:
             "age_lbl": [year],
             "race_lbl": [race_lbl],
             "fin": [
-                stats_fin.quantile(0.5, return_pandas=False)[0] if stats_fin else np.nan
+                (
+                    stats_fin.quantile(0.5, return_pandas=False)[0]
+                    if stats_fin
+                    else np.nan
+                ),
             ],
             "hequity": [
-                stats_hequity.quantile(0.5, return_pandas=False)[0]
-                if stats_hequity
-                else np.nan
+                (
+                    stats_hequity.quantile(0.5, return_pandas=False)[0]
+                    if stats_hequity
+                    else np.nan
+                ),
             ],
             "equityfin": [
-                stats_equityfin.quantile(0.5, return_pandas=False)[0]
-                if stats_equityfin
-                else np.nan
+                (
+                    stats_equityfin.quantile(0.5, return_pandas=False)[0]
+                    if stats_equityfin
+                    else np.nan
+                ),
             ],
         },
     )

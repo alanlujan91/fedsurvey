@@ -96,6 +96,7 @@ def analyze_income_mobility(
     Returns:
     -------
         DataFrame with transition probabilities
+
     """
     try:
         # Get data for both years
@@ -129,7 +130,9 @@ def analyze_income_mobility(
         # Ensure all quantiles are represented
         all_labels = [f"Q{i+1}" for i in range(n_quantiles)]
         transition = transition.reindex(
-            index=all_labels, columns=all_labels, fill_value=0
+            index=all_labels,
+            columns=all_labels,
+            fill_value=0,
         )
 
         return transition

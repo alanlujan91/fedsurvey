@@ -125,6 +125,7 @@ def detailed_wealth_composition(
     Raises:
     ------
         ProcessingError: If required columns are missing
+
     """
     try:
         # Validate components exist in DataFrame

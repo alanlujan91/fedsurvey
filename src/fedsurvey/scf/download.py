@@ -50,6 +50,7 @@ def download_year(year: int, file_type: str = "stata") -> Path:
     ------
         DownloadError: If download fails
         ValueError: If year or file_type is invalid
+
     """
     try:
         if year not in VALID_YEARS:
@@ -91,6 +92,7 @@ def save_year_zip(
     ------
         DownloadError: If download or save operations fail
         ValueError: If year or file_type is invalid
+
     """
     try:
         # Validate year before attempting download
@@ -152,6 +154,7 @@ def download_all_years(
     Raises:
     ------
         DownloadError: If any download fails
+
     """
     if years is None:
         years = list(VALID_YEARS)

@@ -24,6 +24,7 @@ def wmedian_lineplot(data, x, y, weights, style, errorbar=False):
     Returns:
     -------
         Matplotlib axes object
+
     """
 
     def compute_stats(group):

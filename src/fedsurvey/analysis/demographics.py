@@ -32,6 +32,7 @@ def wealth_by_education(
     Raises:
     ------
         ProcessingError: If DataFrame is empty or missing required columns
+
     """
     try:
         # Check for empty DataFrame first
