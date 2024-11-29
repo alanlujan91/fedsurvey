@@ -24,7 +24,7 @@ def raw_scf_data():
     )
 
 
-def test_variable_renaming(raw_scf_data):
+def test_variable_renaming(raw_scf_data) -> None:
     """Test variable renaming."""
     result = harmonize_variables(raw_scf_data, 2019)
 
@@ -42,7 +42,7 @@ def test_variable_renaming(raw_scf_data):
     assert all(col in result.columns for col in expected_cols)
 
 
-def test_education_mapping(raw_scf_data):
+def test_education_mapping(raw_scf_data) -> None:
     """Test education level mapping."""
     result = harmonize_variables(raw_scf_data, 2019)
 
@@ -50,7 +50,7 @@ def test_education_mapping(raw_scf_data):
     assert result["education_label"].iloc[1] == "College grad"
 
 
-def test_invalid_year():
+def test_invalid_year() -> None:
     """Test handling of invalid survey year."""
     df = pd.DataFrame({"B3201": [50000]})
 
@@ -58,7 +58,7 @@ def test_invalid_year():
         harmonize_variables(df, 1900)
 
 
-def test_missing_columns():
+def test_missing_columns() -> None:
     """Test handling of missing required columns."""
     df = pd.DataFrame({"other_col": [1, 2, 3]})
 

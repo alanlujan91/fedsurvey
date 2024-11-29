@@ -102,7 +102,7 @@ def test_calculate_percentiles(sample_data: pd.DataFrame) -> None:
     result = calculate_percentiles(sample_data, "networth", "wgt", [10, 50, 90])
 
     assert isinstance(result, dict)
-    assert all(0 <= p <= 100 for p in result.keys())
+    assert all(0 <= p <= 100 for p in result)
     assert result[10] < result[50] < result[90]
 
 

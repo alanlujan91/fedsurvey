@@ -76,7 +76,7 @@ def sample_debt_data():
     )
 
 
-def test_portfolio_composition_by_year(sample_portfolio_data):
+def test_portfolio_composition_by_year(sample_portfolio_data) -> None:
     """Test portfolio composition analysis by year."""
     result = analyze_portfolio_composition(sample_portfolio_data)
 
@@ -86,7 +86,7 @@ def test_portfolio_composition_by_year(sample_portfolio_data):
     assert all(col.endswith("_share") for col in result.columns)
 
 
-def test_portfolio_composition_by_percentile(sample_portfolio_data):
+def test_portfolio_composition_by_percentile(sample_portfolio_data) -> None:
     """Test portfolio composition analysis by wealth percentile."""
     result = analyze_portfolio_composition(
         sample_portfolio_data,
@@ -100,7 +100,7 @@ def test_portfolio_composition_by_percentile(sample_portfolio_data):
     assert all(0 <= val <= 1 for val in result.values.flatten())
 
 
-def test_debt_composition_analysis(sample_debt_data):
+def test_debt_composition_analysis(sample_debt_data) -> None:
     """Test debt composition analysis."""
     result = analyze_debt_composition(sample_debt_data)
 
@@ -111,7 +111,7 @@ def test_debt_composition_analysis(sample_debt_data):
     assert "credit_card_pir" in result.columns
 
 
-def test_invalid_data_handling():
+def test_invalid_data_handling() -> None:
     """Test handling of invalid data."""
     invalid_df = pd.DataFrame({"col1": [1, 2, 3]})
 

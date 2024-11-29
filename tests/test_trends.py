@@ -38,7 +38,7 @@ def sample_trend_data():
     return pd.concat(data, ignore_index=True)
 
 
-def test_wealth_growth_rates(sample_trend_data):
+def test_wealth_growth_rates(sample_trend_data) -> None:
     """Test wealth growth rate calculations."""
     result = wealth_growth_rates(
         sample_trend_data,
@@ -54,7 +54,7 @@ def test_wealth_growth_rates(sample_trend_data):
     assert all(-0.5 <= x <= 1.0 for x in result.values.flatten() if not pd.isna(x))
 
 
-def test_concentration_trends(sample_trend_data):
+def test_concentration_trends(sample_trend_data) -> None:
     """Test concentration trend analysis."""
     result = concentration_trends(
         sample_trend_data,
@@ -67,7 +67,7 @@ def test_concentration_trends(sample_trend_data):
     assert all(0 <= val <= 1 for val in result.values.flatten())
 
 
-def test_mobility_analysis(sample_trend_data):
+def test_mobility_analysis(sample_trend_data) -> None:
     """Test mobility analysis."""
     result = mobility_analysis(
         sample_trend_data,
@@ -85,7 +85,7 @@ def test_mobility_analysis(sample_trend_data):
     )
 
 
-def test_invalid_years():
+def test_invalid_years() -> None:
     """Test handling of invalid years."""
     df = pd.DataFrame(
         {"year": [2019, 2019], "networth": [100000, 200000], "wgt": [1, 1]},
@@ -95,7 +95,7 @@ def test_invalid_years():
         mobility_analysis(df, 2019, 2020)
 
 
-def test_insufficient_data():
+def test_insufficient_data() -> None:
     """Test handling of insufficient data."""
     df = pd.DataFrame({"year": [2019], "networth": [100000], "wgt": [1]})
 

@@ -2,13 +2,12 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Optional
 
 import requests
 from requests.exceptions import RequestException
 
-from ..exceptions import DownloadError
-from ..models import SCFMetadata
+from fedsurvey.exceptions import DownloadError
+from fedsurvey.models import SCFMetadata
 
 # Constants
 SCF_DATA_URL = "https://www.federalreserve.gov/econres/files/"
@@ -54,26 +53,29 @@ def download_year(year: int, file_type: str = "stata") -> Path:
     """
     try:
         if year not in VALID_YEARS:
+            msg = f"Invalid year: {year}. Must be one of {list(VALID_YEARS)}"
             raise ValueError(
-                f"Invalid year: {year}. Must be one of {list(VALID_YEARS)}",
+                msg,
             )
 
         if file_type not in FILE_TYPES:
+            msg = f"Invalid file type: {file_type}. Must be one of {list(FILE_TYPES.keys())}"
             raise ValueError(
-                f"Invalid file type: {file_type}. Must be one of {list(FILE_TYPES.keys())}",
+                msg,
             )
 
         return save_year_zip(year, file_type)
 
     except Exception as e:
-        raise DownloadError(f"Failed to download data for {year}: {e}") from e
+        msg = f"Failed to download data for {year}: {e}"
+        raise DownloadError(msg) from e
 
 
 def save_year_zip(
     year: int,
     file_type: str = "stata",
-    save_dir: Optional[Path] = None,
-    session: Optional[requests.Session] = None,
+    save_dir: Path | None = None,
+    session: requests.Session | None = None,
 ) -> Path:
     """Download and save SCF data for a specific year.
 
@@ -97,8 +99,9 @@ def save_year_zip(
     try:
         # Validate year before attempting download
         if year not in VALID_YEARS:
+            msg = f"Invalid year: {year}. Must be one of {list(VALID_YEARS)}"
             raise ValueError(
-                f"Invalid year: {year}. Must be one of {list(VALID_YEARS)}",
+                msg,
             )
 
         if save_dir is None:
@@ -124,7 +127,7 @@ def save_year_zip(
                 f.write(chunk)
 
         # Create metadata
-        metadata = SCFMetadata(
+        SCFMetadata(
             year=year,
             file_type=file_type,
             record_count=0,  # This would be updated after processing
@@ -133,12 +136,13 @@ def save_year_zip(
         return save_path
 
     except RequestException as e:
-        raise DownloadError(f"Failed to download {file_name}: {e}") from e
+        msg = f"Failed to download {file_name}: {e}"
+        raise DownloadError(msg) from e
 
 
 def download_all_years(
     file_type: str = "stata",
-    years: Optional[list[int]] = None,
+    years: list[int] | None = None,
 ) -> list[Path]:
     """Download SCF data for multiple years.
 
@@ -167,6 +171,7 @@ def download_all_years(
             path = save_year_zip(year, file_type, session=session)
             paths.append(path)
         except Exception as e:
-            raise DownloadError(f"Failed to download data for {year}: {e}") from e
+            msg = f"Failed to download data for {year}: {e}"
+            raise DownloadError(msg) from e
 
     return paths

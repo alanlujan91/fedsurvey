@@ -25,7 +25,7 @@ def sample_plot_data():
     )
 
 
-def test_wmedian_lineplot(sample_plot_data):
+def test_wmedian_lineplot(sample_plot_data) -> None:
     """Test weighted median line plot."""
     plt.figure()
     plot = wmedian_lineplot(
@@ -42,7 +42,7 @@ def test_wmedian_lineplot(sample_plot_data):
     plt.close()
 
 
-def test_wmean_lineplot(sample_plot_data):
+def test_wmean_lineplot(sample_plot_data) -> None:
     """Test weighted mean line plot."""
     plt.figure()
     plot = wmean_lineplot(sample_plot_data, "x", "y", "weights", "style", errorbar=True)
@@ -52,7 +52,7 @@ def test_wmean_lineplot(sample_plot_data):
     plt.close()
 
 
-def test_weighted_relplot(sample_plot_data):
+def test_weighted_relplot(sample_plot_data) -> None:
     """Test weighted relational plot."""
     plot = weighted_relplot(sample_plot_data, "x", "y", "weights", "col", "style")
 
@@ -61,7 +61,7 @@ def test_weighted_relplot(sample_plot_data):
     plt.close()
 
 
-def test_plot_error_handling():
+def test_plot_error_handling() -> None:
     """Test error handling in plotting functions."""
     invalid_df = pd.DataFrame({"col1": [1, 2, 3]})
 

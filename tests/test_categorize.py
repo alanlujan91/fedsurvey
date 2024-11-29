@@ -6,7 +6,7 @@ import pandas as pd
 from fedsurvey.scf.categorize import categorize_income, categorize_work_status
 
 
-def test_income_categories():
+def test_income_categories() -> None:
     """Test income categorization."""
     df = pd.DataFrame({"income": [5000, 15000, 30000, 75000, 150000]})
 
@@ -14,7 +14,7 @@ def test_income_categories():
     assert list(result["income_cat"]) == [1, 2, 3, 4, 5]
 
 
-def test_work_status():
+def test_work_status() -> None:
     """Test work status categorization."""
     df = pd.DataFrame({"X4106": [1, 2, 50, 21], "age": [45, 50, 70, 70]})
 

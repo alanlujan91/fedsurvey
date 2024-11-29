@@ -2,16 +2,18 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import TYPE_CHECKING
 
 import matplotlib.pyplot as plt
-import pandas as pd
 import seaborn as sns
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 def plot_wealth_distribution(
     df: pd.DataFrame,
-    year: Optional[int] = None,
+    year: int | None = None,
     log_scale: bool = True,
     weighted: bool = True,
 ) -> plt.Figure:
@@ -37,7 +39,7 @@ def plot_lorenz_curve(
     df: pd.DataFrame,
     wealth_col: str = "networth",
     weight_col: str = "wgt",
-    year: Optional[int] = None,
+    year: int | None = None,
 ) -> plt.Figure:
     """Plot Lorenz curve for wealth distribution."""
     fig, ax = plt.subplots(figsize=(8, 8))
@@ -69,7 +71,7 @@ def plot_lorenz_curve(
 
 def plot_age_wealth_profile(
     df: pd.DataFrame,
-    years: Optional[List[int]] = None,
+    years: list[int] | None = None,
     log_scale: bool = True,
     adjust_inflation: bool = True,
 ) -> plt.Figure:
@@ -102,8 +104,8 @@ def plot_age_wealth_profile(
 
 def plot_wealth_components(
     df: pd.DataFrame,
-    components: List[str],
-    year: Optional[int] = None,
+    components: list[str],
+    year: int | None = None,
     stacked: bool = True,
 ) -> plt.Figure:
     """Plot composition of household wealth."""

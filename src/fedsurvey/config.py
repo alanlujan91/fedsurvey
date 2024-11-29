@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, Final
+from typing import Final
 
 # URLs and Data Sources
 SCF_DATA_URL: Final = "https://www.federalreserve.gov/econres/files/"
@@ -14,7 +14,7 @@ LAST_YEAR: Final = 2022
 INTERVAL: Final = 3
 
 # File type mappings
-FILE_TYPES: Final[Dict[str, str]] = {
+FILE_TYPES: Final[dict[str, str]] = {
     "sas": ".zip",
     "stata": "s.zip",
     "csv": "excel.zip",

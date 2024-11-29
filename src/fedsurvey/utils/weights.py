@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from typing import List
+from typing import TYPE_CHECKING
 
-import pandas as pd
+from fedsurvey.exceptions import ProcessingError
 
-from ..exceptions import ProcessingError
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 def apply_replicate_weights(
@@ -32,13 +33,14 @@ def apply_replicate_weights(
         df[f"{weight_col}_adj"] = df[weight_col] / replicate_factor
         return df
     except Exception as e:
-        raise ProcessingError(f"Error applying replicate weights: {e}")
+        msg = f"Error applying replicate weights: {e}"
+        raise ProcessingError(msg)
 
 
 def adjust_influential_weights(
     df: pd.DataFrame,
     threshold: float = 0.015,  # 1.5% as used in bulletin
-    measures: List[str] = ["networth", "fin", "nfin", "debt"],
+    measures: list[str] | None = None,
     weight_col: str = "wgt",
 ) -> pd.DataFrame:
     """Adjust weights to dampen influence of extreme cases.
@@ -55,6 +57,8 @@ def adjust_influential_weights(
         DataFrame with adjusted weights
 
     """
+    if measures is None:
+        measures = ["networth", "fin", "nfin", "debt"]
     try:
         df = df.copy()
         totals = {m: (df[m] * df[weight_col]).sum() for m in measures}
@@ -67,4 +71,5 @@ def adjust_influential_weights(
 
         return df
     except Exception as e:
-        raise ProcessingError(f"Error adjusting influential weights: {e}")
+        msg = f"Error adjusting influential weights: {e}"
+        raise ProcessingError(msg)

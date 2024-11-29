@@ -25,7 +25,7 @@ def sample_compute_data():
     )
 
 
-def test_compute_means(sample_compute_data):
+def test_compute_means(sample_compute_data) -> None:
     """Test mean computation."""
     result = compute_means(sample_compute_data)
 
@@ -34,7 +34,7 @@ def test_compute_means(sample_compute_data):
     assert len(result) == 1  # One row per group
 
 
-def test_compute_medians(sample_compute_data):
+def test_compute_medians(sample_compute_data) -> None:
     """Test median computation."""
     result = compute_medians(sample_compute_data)
 
@@ -43,7 +43,7 @@ def test_compute_medians(sample_compute_data):
     assert len(result) == 1
 
 
-def test_compute_with_missing_data():
+def test_compute_with_missing_data() -> None:
     """Test computation with missing data."""
     df = pd.DataFrame(
         {
@@ -57,7 +57,7 @@ def test_compute_with_missing_data():
     )
 
     result_means = compute_means(df)
-    result_medians = compute_medians(df)
+    compute_medians(df)
 
     assert pd.isna(result_means["fin"].iloc[0])
     assert not pd.isna(result_means["hequity"].iloc[0])

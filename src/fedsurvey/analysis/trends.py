@@ -2,18 +2,16 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
-
 import pandas as pd
 
-from ..exceptions import ProcessingError
-from ..utils.stats import calculate_top_share, weighted_quantile
+from fedsurvey.exceptions import ProcessingError
+from fedsurvey.utils.stats import calculate_top_share, weighted_quantile
 
 
 def wealth_growth_rates(
     df: pd.DataFrame,
-    measures: List[str] = ["networth", "income"],
-    percentiles: List[float] = [10, 50, 90],
+    measures: list[str] | None = None,
+    percentiles: list[float] | None = None,
     weight_col: str = "wgt",
 ) -> pd.DataFrame:
     """Calculate growth rates of wealth measures over time.
@@ -30,6 +28,10 @@ def wealth_growth_rates(
         DataFrame with growth rates by year
 
     """
+    if percentiles is None:
+        percentiles = [10, 50, 90]
+    if measures is None:
+        measures = ["networth", "income"]
     try:
         growth = pd.DataFrame()
 
@@ -54,16 +56,21 @@ def wealth_growth_rates(
         return growth
 
     except Exception as e:
-        raise ProcessingError(f"Error calculating growth rates: {e}")
+        msg = f"Error calculating growth rates: {e}"
+        raise ProcessingError(msg)
 
 
 def concentration_trends(
     df: pd.DataFrame,
-    measures: List[str] = ["networth", "financial_assets"],
-    top_shares: List[float] = [0.01, 0.1, 0.5],
+    measures: list[str] | None = None,
+    top_shares: list[float] | None = None,
     weight_col: str = "wgt",
 ) -> pd.DataFrame:
     """Analyze trends in wealth concentration over time."""
+    if top_shares is None:
+        top_shares = [0.01, 0.1, 0.5]
+    if measures is None:
+        measures = ["networth", "financial_assets"]
     try:
         trends = pd.DataFrame()
 
@@ -83,31 +90,37 @@ def concentration_trends(
         return trends
 
     except Exception as e:
-        raise ProcessingError(f"Error calculating concentration trends: {e}")
+        msg = f"Error calculating concentration trends: {e}"
+        raise ProcessingError(msg)
 
 
 def wealth_mobility(
     df: pd.DataFrame,
     n_quantiles: int = 5,
-    measures: List[str] = ["networth"],
+    measures: list[str] | None = None,
     weight_col: str = "wgt",
-    by_group: Optional[str] = None,
+    by_group: str | None = None,
 ) -> pd.DataFrame:
     """Analyze movement between wealth quantiles across survey years."""
+    if measures is None:
+        measures = ["networth"]
     try:
         if df.empty:
-            raise ProcessingError("Empty DataFrame provided")
+            msg = "Empty DataFrame provided"
+            raise ProcessingError(msg)
 
         df = df.copy()
 
         # Validate required columns
         if by_group and by_group not in df.columns:
-            raise ProcessingError(f"Group column '{by_group}' not found")
+            msg = f"Group column '{by_group}' not found"
+            raise ProcessingError(msg)
 
         # Create transition matrix for each year pair
         years = sorted(df["year"].unique())
         if len(years) < 2:
-            raise ProcessingError("Need at least two years of data")
+            msg = "Need at least two years of data"
+            raise ProcessingError(msg)
 
         transitions = []
         for i in range(len(years) - 1):
@@ -142,7 +155,7 @@ def wealth_mobility(
             transitions.append(matrix.values.flatten())
 
         # Create DataFrame with transitions
-        mobility = pd.DataFrame(
+        return pd.DataFrame(
             transitions,
             columns=[
                 f"Q{i+1}_to_Q{j+1}"
@@ -152,10 +165,9 @@ def wealth_mobility(
             index=[f"{years[i]}-{years[i+1]}" for i in range(len(years) - 1)],
         )
 
-        return mobility
-
     except Exception as e:
-        raise ProcessingError(f"Error analyzing mobility: {e}")
+        msg = f"Error analyzing mobility: {e}"
+        raise ProcessingError(msg)
 
 
 def mobility_analysis(
@@ -190,8 +202,9 @@ def mobility_analysis(
         end = df[df["year"] == end_year].copy()
 
         if len(base) == 0 or len(end) == 0:
+            msg = f"No data found for years {base_year} and/or {end_year}"
             raise ProcessingError(
-                f"No data found for years {base_year} and/or {end_year}",
+                msg,
             )
 
         # Create wealth quantiles
@@ -217,13 +230,12 @@ def mobility_analysis(
 
         # Ensure all quantiles are represented
         all_labels = range(n_quantiles)
-        transition = transition.reindex(
+        return transition.reindex(
             index=all_labels,
             columns=all_labels,
             fill_value=0,
         )
 
-        return transition
-
     except Exception as e:
-        raise ProcessingError(f"Error analyzing mobility: {e}")
+        msg = f"Error analyzing mobility: {e}"
+        raise ProcessingError(msg)

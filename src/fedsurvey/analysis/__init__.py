@@ -2,14 +2,17 @@
 
 from __future__ import annotations
 
-from ..utils.compute import compute_means, compute_medians
-from ..utils.stats import (
+from typing import Optional
+
+from fedsurvey.utils.compute import compute_means, compute_medians
+from fedsurvey.utils.stats import (
     calculate_top_share,
     gini_coefficient,
     weighted_mean,
     weighted_quantile,
     weighted_std,
 )
+
 from .core import calculate_concentration, calculate_percentiles
 from .demographics import (
     intersectional_wealth_gap,
@@ -29,9 +32,11 @@ def wealth_shares(
     df,
     wealth_col: str = "networth",
     weight_col: str = "wgt",
-    groups: list[float] = [0.5, 0.9, 0.99],
+    groups: list[float] | None = None,
 ) -> dict[str, float]:
     """Calculate wealth shares for different percentile groups."""
+    if groups is None:
+        groups = [0.5, 0.9, 0.99]
     total_wealth = (df[wealth_col] * df[weight_col]).sum()
     shares = {}
 

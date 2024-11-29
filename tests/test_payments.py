@@ -7,7 +7,7 @@ import pandas as pd
 from fedsurvey.analysis.payments import analyze_payment_types, calculate_payment_ratios
 
 
-def test_payment_ratios():
+def test_payment_ratios() -> None:
     """Test payment ratio calculations."""
     df = pd.DataFrame(
         {
@@ -29,7 +29,7 @@ def test_payment_ratios():
     assert not result["high_payment_burden"].any()
 
 
-def test_payment_types():
+def test_payment_types() -> None:
     """Test payment type analysis."""
     df = pd.DataFrame(
         {

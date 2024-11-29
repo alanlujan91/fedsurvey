@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional
-
 import numpy as np
 import pandas as pd
 
@@ -11,10 +9,12 @@ import pandas as pd
 def calculate_percentiles(
     df: pd.DataFrame,
     variable: str,
-    weights: Optional[str] = "wgt",
-    percentiles: List[float] = [10, 25, 50, 75, 90],
-) -> Dict[float, float]:
+    weights: str | None = "wgt",
+    percentiles: list[float] | None = None,
+) -> dict[float, float]:
     """Calculate weighted percentiles for a variable."""
+    if percentiles is None:
+        percentiles = [10, 25, 50, 75, 90]
     if weights is None:
         return {p: df[variable].quantile(p / 100) for p in percentiles}
 
@@ -23,7 +23,7 @@ def calculate_percentiles(
     }
 
 
-def gini_coefficient(values: np.ndarray, weights: Optional[np.ndarray] = None) -> float:
+def gini_coefficient(values: np.ndarray, weights: np.ndarray | None = None) -> float:
     """Calculate the Gini coefficient of inequality."""
     if weights is None:
         weights = np.ones_like(values)
@@ -44,9 +44,11 @@ def wealth_shares(
     df: pd.DataFrame,
     wealth_col: str = "networth",
     weight_col: str = "wgt",
-    groups: List[float] = [0.5, 0.9, 0.99],
-) -> Dict[str, float]:
+    groups: list[float] | None = None,
+) -> dict[str, float]:
     """Calculate wealth shares for different percentile groups."""
+    if groups is None:
+        groups = [0.5, 0.9, 0.99]
     total_wealth = (df[wealth_col] * df[weight_col]).sum()
     shares = {}
 
@@ -65,9 +67,11 @@ def calculate_age_wealth_profile(
     df: pd.DataFrame,
     wealth_col: str = "networth",
     weight_col: str = "wgt",
-    age_bins: List[int] = [25, 35, 45, 55, 65, 75, 85],
+    age_bins: list[int] | None = None,
 ) -> pd.DataFrame:
     """Calculate median wealth by age group."""
+    if age_bins is None:
+        age_bins = [25, 35, 45, 55, 65, 75, 85]
     df["age_group"] = pd.cut(df["age"], bins=age_bins)
 
     profiles = []
@@ -115,21 +119,19 @@ def calculate_wealth_mobility(
     )
 
     # Create transition matrix
-    transition = pd.crosstab(
+    return pd.crosstab(
         base["wealth_group"],
         target["wealth_group"],
         base[weight_col],
         normalize="index",
     )
 
-    return transition
-
 
 def decompose_inequality(
     df: pd.DataFrame,
-    components: List[str],
+    components: list[str],
     weight_col: str = "wgt",
-) -> Dict[str, float]:
+) -> dict[str, float]:
     """Decompose wealth inequality into components."""
     total_wealth = df["networth"]
     total_gini = gini_coefficient(total_wealth, df[weight_col])

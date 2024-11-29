@@ -24,37 +24,40 @@ Examples
 
 from __future__ import annotations
 
-from typing import List, Optional
-
 import pandas as pd
 
-from ..exceptions import ProcessingError
+from fedsurvey.exceptions import ProcessingError
 
 
 def wealth_composition(
     df: pd.DataFrame,
-    components: List[str] = [
-        "financial_assets",
-        "business_value",
-        "home_value",
-        "retirement_accounts",
-    ],
-    by_group: Optional[str] = None,
+    components: list[str] | None = None,
+    by_group: str | None = None,
     weight_col: str = "wgt",
 ) -> pd.DataFrame:
     """Analyze composition of household wealth across different components."""
+    if components is None:
+        components = [
+            "financial_assets",
+            "business_value",
+            "home_value",
+            "retirement_accounts",
+        ]
     try:
         # Validate empty DataFrame first
         if df.empty:
-            raise ProcessingError("Empty DataFrame provided")
+            msg = "Empty DataFrame provided"
+            raise ProcessingError(msg)
 
         # Validate components exist in DataFrame
         missing_cols = [col for col in components if col not in df.columns]
         if missing_cols:
-            raise ProcessingError(f"Missing required columns: {missing_cols}")
+            msg = f"Missing required columns: {missing_cols}"
+            raise ProcessingError(msg)
 
         if by_group and by_group not in df.columns:
-            raise ProcessingError(f"Group column '{by_group}' not found")
+            msg = f"Group column '{by_group}' not found"
+            raise ProcessingError(msg)
 
         df = df.copy()
         shares = pd.DataFrame()
@@ -81,26 +84,13 @@ def wealth_composition(
         return shares
 
     except Exception as e:
-        raise ProcessingError(f"Error calculating wealth composition: {e}")
+        msg = f"Error calculating wealth composition: {e}"
+        raise ProcessingError(msg)
 
 
 def detailed_wealth_composition(
     df: pd.DataFrame,
-    components: List[str] = [
-        "fin",
-        "nfin",
-        "debt",
-        "checking",
-        "savings",
-        "stocks",
-        "bonds",
-        "vehicles",
-        "houses",
-        "business",
-        "credit_card",
-        "mortgages",
-        "education_loans",
-    ],
+    components: list[str] | None = None,
     by_percentile: bool = True,
     n_percentiles: int = 5,
     weight_col: str = "wgt",
@@ -127,11 +117,28 @@ def detailed_wealth_composition(
         ProcessingError: If required columns are missing
 
     """
+    if components is None:
+        components = [
+            "fin",
+            "nfin",
+            "debt",
+            "checking",
+            "savings",
+            "stocks",
+            "bonds",
+            "vehicles",
+            "houses",
+            "business",
+            "credit_card",
+            "mortgages",
+            "education_loans",
+        ]
     try:
         # Validate components exist in DataFrame
         missing_cols = [col for col in components if col not in df.columns]
         if missing_cols:
-            raise ProcessingError(f"Missing required columns: {missing_cols}")
+            msg = f"Missing required columns: {missing_cols}"
+            raise ProcessingError(msg)
 
         df = df.copy()
         if by_percentile:
@@ -158,6 +165,8 @@ def detailed_wealth_composition(
         return pd.DataFrame(compositions)
 
     except KeyError as e:
-        raise ProcessingError(f"Error accessing column: {e}")
+        msg = f"Error accessing column: {e}"
+        raise ProcessingError(msg)
     except Exception as e:
-        raise ProcessingError(f"Error calculating detailed wealth composition: {e}")
+        msg = f"Error calculating detailed wealth composition: {e}"
+        raise ProcessingError(msg)

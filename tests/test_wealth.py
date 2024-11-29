@@ -35,7 +35,7 @@ def sample_wealth_data():
     )
 
 
-def test_wealth_composition(sample_wealth_data):
+def test_wealth_composition(sample_wealth_data) -> None:
     """Test wealth composition analysis."""
     components = [
         "financial_assets",
@@ -51,7 +51,7 @@ def test_wealth_composition(sample_wealth_data):
     assert np.allclose(result.sum(axis=1), 1)  # Shares sum to 1
 
 
-def test_detailed_composition(sample_wealth_data):
+def test_detailed_composition(sample_wealth_data) -> None:
     """Test detailed wealth composition analysis."""
     components = ["fin", "nfin", "debt", "checking", "savings", "stocks", "bonds"]
 
@@ -67,7 +67,7 @@ def test_detailed_composition(sample_wealth_data):
     assert all(col.endswith("_share") for col in result.columns)
 
 
-def test_invalid_components():
+def test_invalid_components() -> None:
     """Test handling of invalid components."""
     df = pd.DataFrame({"networth": [100000], "wgt": [1]})
 
@@ -75,7 +75,7 @@ def test_invalid_components():
         wealth_composition(df, ["invalid_component"])
 
 
-def test_negative_values(sample_wealth_data):
+def test_negative_values(sample_wealth_data) -> None:
     """Test handling of negative values."""
     sample_wealth_data.loc[0, "networth"] = -100000
 

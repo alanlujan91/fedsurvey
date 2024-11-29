@@ -4,14 +4,16 @@ from __future__ import annotations
 
 import logging
 from concurrent.futures import ThreadPoolExecutor
-from pathlib import Path
-from typing import Callable, Optional
+from typing import TYPE_CHECKING, Callable
 
 import numpy as np
 import pandas as pd
 
-from ..config import CHUNK_SIZE, DATA_DIR, MAX_WORKERS
-from ..models import SCFRecord
+from fedsurvey.config import CHUNK_SIZE, DATA_DIR, MAX_WORKERS
+from fedsurvey.models import SCFRecord
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +25,7 @@ class MergeError(Exception):
 def process_file(
     data_file: Path,
     read_func: Callable[[str], pd.DataFrame],
-) -> Optional[pd.DataFrame]:
+) -> pd.DataFrame | None:
     """Process a single SCF data file.
 
     Args:
@@ -48,23 +50,22 @@ def process_file(
     except ValueError as e:
         logger.warning(f"ValueError processing {data_file.name}: {e}")
         try:
-            df = read_func(str(data_file), convert_categoricals=False).assign(
+            return read_func(str(data_file), convert_categoricals=False).assign(
                 year=data_file.stem[-4:],
             )
-            return df
         except Exception as e:
-            logger.error(f"Failed to process {data_file.name}: {e}")
+            logger.exception(f"Failed to process {data_file.name}: {e}")
             return None
     except Exception as e:
-        logger.error(f"Unexpected error processing {data_file.name}: {e}")
+        logger.exception(f"Unexpected error processing {data_file.name}: {e}")
         return None
 
 
 def merge_files(
     from_format: str = "stata",
     to_format: str = "stata",
-    input_dir: Optional[Path] = None,
-    output_dir: Optional[Path] = None,
+    input_dir: Path | None = None,
+    output_dir: Path | None = None,
 ) -> Path:
     """Merge SCF data files from multiple years.
 

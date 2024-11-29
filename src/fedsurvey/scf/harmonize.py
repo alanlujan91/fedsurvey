@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
-import pandas as pd
+from typing import TYPE_CHECKING
 
-from ..exceptions import ProcessingError
+from fedsurvey.exceptions import ProcessingError
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 def harmonize_variables(df: pd.DataFrame, year: int) -> pd.DataFrame:
@@ -27,8 +30,9 @@ def harmonize_variables(df: pd.DataFrame, year: int) -> pd.DataFrame:
     try:
         # Validate year first
         if year < 1989 or year > 2022:
+            msg = f"Invalid survey year: {year}. Must be between 1989 and 2022"
             raise ProcessingError(
-                f"Invalid survey year: {year}. Must be between 1989 and 2022",
+                msg,
             )
 
         # Map raw SCF variables to standardized names based on bulletin.macro
@@ -64,7 +68,8 @@ def harmonize_variables(df: pd.DataFrame, year: int) -> pd.DataFrame:
         # Check required columns exist
         missing_cols = [col for col in VARIABLE_MAP if col not in df.columns]
         if missing_cols:
-            raise ProcessingError(f"Missing required columns: {missing_cols}")
+            msg = f"Missing required columns: {missing_cols}"
+            raise ProcessingError(msg)
 
         df = df.copy()
         df = df.rename(columns=VARIABLE_MAP)
@@ -75,7 +80,8 @@ def harmonize_variables(df: pd.DataFrame, year: int) -> pd.DataFrame:
 
         return df
 
-    except ProcessingError as e:
-        raise e
+    except ProcessingError:
+        raise
     except Exception as e:
-        raise ProcessingError(f"Error harmonizing variables: {e}")
+        msg = f"Error harmonizing variables: {e}"
+        raise ProcessingError(msg)

@@ -13,42 +13,42 @@ from statsmodels.stats.weightstats import DescrStatsW
 
 
 # Define a function for thousands formatting
-def thousands_formater(x, pos):
+def thousands_formater(x, pos) -> str:
     return "%1.1f" % (x / 1_000)
 
 
 thousands_formater = FuncFormatter(thousands_formater)
 
 
-def tens_of_thousands_formater(x, pos):
+def tens_of_thousands_formater(x, pos) -> str:
     return "%1.1f" % (x / 10_000)
 
 
 tens_of_thousands_formater = FuncFormatter(tens_of_thousands_formater)
 
 
-def hundreds_of_thousands_formater(x, pos):
+def hundreds_of_thousands_formater(x, pos) -> str:
     return "%1.1f" % (x / 100_000)
 
 
 hundreds_of_thousands_formater = FuncFormatter(hundreds_of_thousands_formater)
 
 
-def millions_formater(x, pos):
+def millions_formater(x, pos) -> str:
     return "%1.1f" % (x / 1_000_000)
 
 
 millions_formater = FuncFormatter(millions_formater)
 
 
-def billions_formater(x, pos):
+def billions_formater(x, pos) -> str:
     return "%1.1f" % (x / 1_000_000_000)
 
 
 billions_formater = FuncFormatter(billions_formater)
 
 
-def trillions_formater(x, pos):
+def trillions_formater(x, pos) -> str:
     return "%1.1f" % (x / 1_000_000_000_000)
 
 

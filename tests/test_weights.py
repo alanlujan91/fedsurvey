@@ -8,7 +8,7 @@ from fedsurvey.exceptions import ProcessingError
 from fedsurvey.utils.weights import adjust_influential_weights, apply_replicate_weights
 
 
-def test_replicate_weights():
+def test_replicate_weights() -> None:
     """Test replicate weight adjustments."""
     df = pd.DataFrame({"wgt": [1.0, 2.0, 3.0]})
 
@@ -16,7 +16,7 @@ def test_replicate_weights():
     assert all(result["wgt_adj"] == df["wgt"] / 5)
 
 
-def test_replicate_weights_missing_column():
+def test_replicate_weights_missing_column() -> None:
     """Test handling of missing weight column."""
     df = pd.DataFrame({"other": [1, 2, 3]})
 
@@ -24,7 +24,7 @@ def test_replicate_weights_missing_column():
         apply_replicate_weights(df)
 
 
-def test_influential_weights():
+def test_influential_weights() -> None:
     """Test influential case weight adjustments."""
     df = pd.DataFrame(
         {

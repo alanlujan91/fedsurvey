@@ -2,21 +2,24 @@
 
 from __future__ import annotations
 
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING
 
-import pandas as pd
+from fedsurvey.exceptions import ProcessingError
+from fedsurvey.utils.stats import weighted_quantile
 
-from ..exceptions import ProcessingError
-from ..utils.stats import weighted_quantile
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 def calculate_percentiles(
     df: pd.DataFrame,
     variable: str,
-    weights: Optional[str] = "wgt",
-    percentiles: List[float] = [10, 25, 50, 75, 90],
-) -> Dict[float, float]:
+    weights: str | None = "wgt",
+    percentiles: list[float] | None = None,
+) -> dict[float, float]:
     """Calculate weighted percentiles for a variable."""
+    if percentiles is None:
+        percentiles = [10, 25, 50, 75, 90]
     try:
         if weights is None:
             return {p: df[variable].quantile(p / 100) for p in percentiles}
@@ -26,15 +29,16 @@ def calculate_percentiles(
             for p in percentiles
         }
     except Exception as e:
-        raise ProcessingError(f"Error calculating percentiles: {e}")
+        msg = f"Error calculating percentiles: {e}"
+        raise ProcessingError(msg)
 
 
 def calculate_concentration(
     df: pd.DataFrame,
     variable: str,
     weight_col: str = "wgt",
-    thresholds: List[float] = [0.01, 0.1, 0.5],
-) -> Dict[str, float]:
+    thresholds: list[float] | None = None,
+) -> dict[str, float]:
     """Calculate concentration metrics (e.g., top 1% share).
 
     Args:
@@ -49,6 +53,8 @@ def calculate_concentration(
         Dictionary with top share values
 
     """
+    if thresholds is None:
+        thresholds = [0.01, 0.1, 0.5]
     try:
         df = df.copy()
         total = (df[variable] * df[weight_col]).sum()
@@ -75,4 +81,5 @@ def calculate_concentration(
         return shares
 
     except Exception as e:
-        raise ProcessingError(f"Error calculating concentration: {e}")
+        msg = f"Error calculating concentration: {e}"
+        raise ProcessingError(msg)

@@ -2,17 +2,15 @@
 
 from __future__ import annotations
 
-from typing import List
-
 import pandas as pd
 
-from ..exceptions import ProcessingError
-from ..utils.stats import weighted_mean, weighted_quantile
+from fedsurvey.exceptions import ProcessingError
+from fedsurvey.utils.stats import weighted_mean, weighted_quantile
 
 
 def wealth_by_education(
     df: pd.DataFrame,
-    measures: List[str] = ["networth", "financial_assets", "income"],
+    measures: list[str] | None = None,
     weight_col: str = "wgt",
     normalize: bool = True,
 ) -> pd.DataFrame:
@@ -34,16 +32,20 @@ def wealth_by_education(
         ProcessingError: If DataFrame is empty or missing required columns
 
     """
+    if measures is None:
+        measures = ["networth", "financial_assets", "income"]
     try:
         # Check for empty DataFrame first
         if df.empty:
-            raise ProcessingError("Empty DataFrame provided")
+            msg = "Empty DataFrame provided"
+            raise ProcessingError(msg)
 
         # Validate required columns
-        required_cols = measures + ["education_label", weight_col]
+        required_cols = [*measures, "education_label", weight_col]
         missing_cols = [col for col in required_cols if col not in df.columns]
         if missing_cols:
-            raise ProcessingError(f"Missing required columns: {missing_cols}")
+            msg = f"Missing required columns: {missing_cols}"
+            raise ProcessingError(msg)
 
         stats = []
         for measure in measures:
@@ -59,13 +61,14 @@ def wealth_by_education(
 
         return pd.DataFrame(stats, index=measures)
     except Exception as e:
-        raise ProcessingError(f"Error analyzing wealth by education: {e}")
+        msg = f"Error analyzing wealth by education: {e}"
+        raise ProcessingError(msg)
 
 
 def racial_wealth_gap(
     df: pd.DataFrame,
     base_group: str = "White non-Hispanic",
-    measures: List[str] = ["networth", "income"],
+    measures: list[str] | None = None,
     weight_col: str = "wgt",
     by_year: bool = True,
 ) -> pd.DataFrame:
@@ -84,6 +87,8 @@ def racial_wealth_gap(
         DataFrame with wealth gaps relative to base group
 
     """
+    if measures is None:
+        measures = ["networth", "income"]
     try:
         df = df.copy()
         if by_year:
@@ -96,13 +101,14 @@ def racial_wealth_gap(
             )
         return _calculate_gaps(df, base_group, measures, weight_col)
     except Exception as e:
-        raise ProcessingError(f"Error analyzing racial wealth gap: {e}")
+        msg = f"Error analyzing racial wealth gap: {e}"
+        raise ProcessingError(msg)
 
 
 def _calculate_gaps(
     df: pd.DataFrame,
     base_group: str,
-    measures: List[str],
+    measures: list[str],
     weight_col: str,
 ) -> pd.DataFrame:
     """Helper function to calculate wealth gaps."""
@@ -111,7 +117,8 @@ def _calculate_gaps(
     for measure in measures:
         base = df[df["race_label"] == base_group]
         if len(base) == 0:
-            raise ValueError(f"Base group '{base_group}' not found in data")
+            msg = f"Base group '{base_group}' not found in data"
+            raise ValueError(msg)
 
         base_median = weighted_quantile(base[measure], base[weight_col], 0.5)
 
@@ -134,7 +141,7 @@ def intersectional_wealth_gap(
     primary_group: str = "race_label",
     secondary_group: str = "education_label",
     base_groups: tuple = ("White non-Hispanic", "College grad"),
-    measures: List[str] = ["networth", "income"],
+    measures: list[str] | None = None,
     weight_col: str = "wgt",
 ) -> pd.DataFrame:
     """Analyze wealth gaps across intersecting demographic characteristics.
@@ -153,6 +160,8 @@ def intersectional_wealth_gap(
         DataFrame with intersectional wealth gaps
 
     """
+    if measures is None:
+        measures = ["networth", "income"]
     try:
         df = df.copy()
         gaps = pd.DataFrame()
@@ -162,7 +171,8 @@ def intersectional_wealth_gap(
             & (df[secondary_group] == base_groups[1])
         ]
         if len(base_data) == 0:
-            raise ValueError(f"Base groups {base_groups} not found in data")
+            msg = f"Base groups {base_groups} not found in data"
+            raise ValueError(msg)
 
         for measure in measures:
             base_median = weighted_quantile(
@@ -189,4 +199,5 @@ def intersectional_wealth_gap(
 
         return gaps
     except Exception as e:
-        raise ProcessingError(f"Error analyzing intersectional gaps: {e}")
+        msg = f"Error analyzing intersectional gaps: {e}"
+        raise ProcessingError(msg)

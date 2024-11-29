@@ -2,22 +2,21 @@
 
 from __future__ import annotations
 
-from typing import List, Optional, Tuple
+from typing import TYPE_CHECKING
 
-import matplotlib
+import matplotlib as mpl
 
-matplotlib.use("Agg")  # Use Agg backend to avoid Tcl/Tk issues
+mpl.use("Agg")  # Use Agg backend to avoid Tcl/Tk issues
 
 import matplotlib.pyplot as plt
-import pandas as pd
 import seaborn as sns
 
-from ..analysis.demographics import racial_wealth_gap
-from ..analysis.trends import wealth_mobility
-from ..analysis.wealth import (
-    detailed_wealth_composition,
-    wealth_composition,
-)
+from fedsurvey.analysis.demographics import racial_wealth_gap
+from fedsurvey.analysis.trends import wealth_mobility
+from fedsurvey.analysis.wealth import detailed_wealth_composition, wealth_composition
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 # Set default style - use seaborn-v0_8-darkgrid for newer seaborn versions
 plt.style.use("seaborn-v0_8-darkgrid")
@@ -25,14 +24,15 @@ plt.style.use("seaborn-v0_8-darkgrid")
 
 def plot_wealth_distribution(
     df: pd.DataFrame,
-    year: Optional[int] = None,
+    year: int | None = None,
     log_scale: bool = True,
     weighted: bool = True,
-    figsize: Optional[Tuple[int, int]] = None,
+    figsize: tuple[int, int] | None = None,
 ) -> plt.Figure:
     """Plot the distribution of wealth."""
     if df.empty:
-        raise ValueError("Empty DataFrame provided")
+        msg = "Empty DataFrame provided"
+        raise ValueError(msg)
 
     fig, ax = plt.subplots(figsize=figsize or (10, 6))
 
@@ -55,11 +55,12 @@ def plot_lorenz_curve(
     df: pd.DataFrame,
     wealth_col: str = "networth",
     weight_col: str = "wgt",
-    year: Optional[int] = None,
+    year: int | None = None,
 ) -> plt.Figure:
     """Plot Lorenz curve for wealth distribution."""
     if df.empty:
-        raise ValueError("Empty DataFrame provided")
+        msg = "Empty DataFrame provided"
+        raise ValueError(msg)
 
     fig, ax = plt.subplots(figsize=(8, 8))
 
@@ -90,13 +91,14 @@ def plot_lorenz_curve(
 
 def plot_wealth_composition_trends(
     df: pd.DataFrame,
-    components: List[str],
-    by_group: Optional[str] = None,
+    components: list[str],
+    by_group: str | None = None,
     figsize: tuple[int, int] = (12, 6),
 ) -> plt.Figure:
     """Plot trends in wealth composition over time."""
     if df.empty:
-        raise ValueError("Empty DataFrame provided")
+        msg = "Empty DataFrame provided"
+        raise ValueError(msg)
 
     fig, ax = plt.subplots(figsize=figsize)
 
@@ -112,12 +114,15 @@ def plot_wealth_composition_trends(
 
 def plot_racial_wealth_gap(
     df: pd.DataFrame,
-    measures: List[str] = ["networth"],
+    measures: list[str] | None = None,
     base_group: str = "White non-Hispanic",
 ) -> plt.Figure:
     """Plot racial wealth gaps over time."""
+    if measures is None:
+        measures = ["networth"]
     if df.empty:
-        raise ValueError("Empty DataFrame provided")
+        msg = "Empty DataFrame provided"
+        raise ValueError(msg)
 
     fig, ax = plt.subplots(figsize=(12, 6))
 
@@ -142,7 +147,8 @@ def plot_wealth_mobility_heatmap(
 ) -> plt.Figure:
     """Plot heatmap showing wealth mobility between quantiles."""
     if df.empty:
-        raise ValueError("Empty DataFrame provided")
+        msg = "Empty DataFrame provided"
+        raise ValueError(msg)
 
     # Reset index to avoid groupby issues
     df = df.reset_index(drop=True)
@@ -150,7 +156,8 @@ def plot_wealth_mobility_heatmap(
 
     # Handle empty mobility data
     if mobility_data.empty:
-        raise ValueError("No mobility data available")
+        msg = "No mobility data available"
+        raise ValueError(msg)
 
     fig, ax = plt.subplots(figsize=(10, 8))
     sns.heatmap(
@@ -167,12 +174,13 @@ def plot_wealth_mobility_heatmap(
 
 def plot_wealth_composition_by_percentile(
     df: pd.DataFrame,
-    components: List[str],
+    components: list[str],
     n_percentiles: int = 5,
 ) -> plt.Figure:
     """Plot stacked bar chart of wealth composition by percentile."""
     if df.empty:
-        raise ValueError("Empty DataFrame provided")
+        msg = "Empty DataFrame provided"
+        raise ValueError(msg)
 
     composition = detailed_wealth_composition(
         df,

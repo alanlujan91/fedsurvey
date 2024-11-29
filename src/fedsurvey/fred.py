@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
-
 import pandas as pd
 from fredapi import Fred
 
@@ -13,7 +11,7 @@ from ..config import FRED_API_KEY
 class FREDData:
     """Class for fetching and managing FRED economic data."""
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None) -> None:
         self.api_key = api_key or FRED_API_KEY
         self.fred = Fred(api_key=self.api_key)
 
@@ -29,7 +27,7 @@ class FREDData:
 
     def get_economic_indicators(
         self,
-        indicators: List[str],
+        indicators: list[str],
         start_year: int,
         end_year: int,
     ) -> pd.DataFrame:

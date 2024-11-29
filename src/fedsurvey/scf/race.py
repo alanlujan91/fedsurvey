@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from ..exceptions import ProcessingError
+from fedsurvey.exceptions import ProcessingError
 
 
 def harmonize_race(df: pd.DataFrame, year: int) -> pd.DataFrame:
@@ -29,7 +29,8 @@ def harmonize_race(df: pd.DataFrame, year: int) -> pd.DataFrame:
     """
     try:
         if year < 1989 or year > 2022:
-            raise ProcessingError(f"Invalid survey year: {year}")
+            msg = f"Invalid survey year: {year}"
+            raise ProcessingError(msg)
 
         df = df.copy()
         df["race_4cat"] = pd.NA
@@ -64,4 +65,5 @@ def harmonize_race(df: pd.DataFrame, year: int) -> pd.DataFrame:
         return df
 
     except Exception as e:
-        raise ProcessingError(f"Error harmonizing race variables: {e}")
+        msg = f"Error harmonizing race variables: {e}"
+        raise ProcessingError(msg)

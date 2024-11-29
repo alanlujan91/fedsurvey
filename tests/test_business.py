@@ -8,7 +8,7 @@ from fedsurvey.analysis.business import (
 )
 
 
-def test_business_ownership():
+def test_business_ownership() -> None:
     """Test business ownership analysis."""
     df = pd.DataFrame(
         {

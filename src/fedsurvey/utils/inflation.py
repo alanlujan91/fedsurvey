@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import TYPE_CHECKING
 
-import pandas as pd
+if TYPE_CHECKING:
+    import pandas as pd
 
 CPI_U_RS = {
     # September values from bulletin.macro
@@ -26,11 +27,12 @@ CPI_U_RS = {
 def get_inflation_factor(
     from_year: int,
     to_year: int = 2022,
-    cpi_data: Dict[int, float] = CPI_U_RS,
+    cpi_data: dict[int, float] = CPI_U_RS,
 ) -> float:
     """Calculate inflation adjustment factor between years."""
     if from_year not in cpi_data or to_year not in cpi_data:
-        raise ValueError(f"CPI data not available for {from_year} or {to_year}")
+        msg = f"CPI data not available for {from_year} or {to_year}"
+        raise ValueError(msg)
     return cpi_data[to_year] / cpi_data[from_year]
 
 

@@ -45,7 +45,7 @@ def sample_income_data():
     return pd.concat(data, ignore_index=True)
 
 
-def test_income_sources_by_year(sample_income_data):
+def test_income_sources_by_year(sample_income_data) -> None:
     """Test income source analysis by year."""
     result = analyze_income_sources(sample_income_data)
 
@@ -55,7 +55,7 @@ def test_income_sources_by_year(sample_income_data):
     assert all(col.endswith("_share") for col in result.columns)
 
 
-def test_income_sources_by_wealth_group(sample_income_data):
+def test_income_sources_by_wealth_group(sample_income_data) -> None:
     """Test income source analysis by wealth group."""
     result = analyze_income_sources(
         sample_income_data,
@@ -68,7 +68,7 @@ def test_income_sources_by_wealth_group(sample_income_data):
     assert all(0 <= val <= 1 for val in result.values.flatten())
 
 
-def test_income_mobility(sample_income_data):
+def test_income_mobility(sample_income_data) -> None:
     """Test income mobility analysis."""
     result = analyze_income_mobility(
         sample_income_data,
@@ -86,7 +86,7 @@ def test_income_mobility(sample_income_data):
     )
 
 
-def test_invalid_years_mobility():
+def test_invalid_years_mobility() -> None:
     """Test handling of invalid years in mobility analysis."""
     df = pd.DataFrame({"year": [2019, 2019], "income": [50000, 75000], "wgt": [1, 1]})
 
@@ -94,7 +94,7 @@ def test_invalid_years_mobility():
         analyze_income_mobility(df, 2019, 2020)
 
 
-def test_missing_columns():
+def test_missing_columns() -> None:
     """Test handling of missing required columns."""
     invalid_df = pd.DataFrame({"col1": [1, 2, 3]})
 

@@ -32,7 +32,7 @@ def sample_race_data():
     return pd.concat([pre2004, post2004], ignore_index=True)
 
 
-def test_pre2004_harmonization(sample_race_data):
+def test_pre2004_harmonization(sample_race_data) -> None:
     """Test pre-2004 race harmonization."""
     pre2004_data = sample_race_data[sample_race_data["year"] < 2004]
     result = harmonize_race(pre2004_data, 1998)
@@ -46,7 +46,7 @@ def test_pre2004_harmonization(sample_race_data):
     )
 
 
-def test_post2004_harmonization(sample_race_data):
+def test_post2004_harmonization(sample_race_data) -> None:
     """Test post-2004 race harmonization."""
     post2004_data = sample_race_data[sample_race_data["year"] >= 2004]
     result = harmonize_race(post2004_data, 2019)
@@ -58,7 +58,7 @@ def test_post2004_harmonization(sample_race_data):
     assert all(result.loc[hispanic_mask, "race_4cat"] == "Hispanic")
 
 
-def test_invalid_year():
+def test_invalid_year() -> None:
     """Test handling of invalid year."""
     df = pd.DataFrame({"X6809": [1], "year": 1900})
 

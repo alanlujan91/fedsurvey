@@ -25,7 +25,7 @@ def sample_literacy_data():
     )
 
 
-def test_finlit_score_calculation(sample_literacy_data):
+def test_finlit_score_calculation(sample_literacy_data) -> None:
     """Test financial literacy score calculation."""
     result = calculate_finlit_score(sample_literacy_data)
 
@@ -34,7 +34,7 @@ def test_finlit_score_calculation(sample_literacy_data):
     assert result["finlit_score"].between(0, 3).all()
 
 
-def test_question_scoring(sample_literacy_data):
+def test_question_scoring(sample_literacy_data) -> None:
     """Test individual question scoring."""
     result = calculate_finlit_score(sample_literacy_data)
 
@@ -45,7 +45,7 @@ def test_question_scoring(sample_literacy_data):
         assert result[col].isin([0, 1]).all()
 
 
-def test_self_assessment(sample_literacy_data):
+def test_self_assessment(sample_literacy_data) -> None:
     """Test self-assessment score."""
     result = calculate_finlit_score(sample_literacy_data)
 
@@ -53,7 +53,7 @@ def test_self_assessment(sample_literacy_data):
     assert result["finlit_self"].between(1, 10).all()
 
 
-def test_invalid_data():
+def test_invalid_data() -> None:
     """Test handling of invalid data."""
     invalid_df = pd.DataFrame({"col1": [1, 2, 3]})
 

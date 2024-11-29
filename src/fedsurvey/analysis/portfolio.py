@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from ..exceptions import ProcessingError
+from fedsurvey.exceptions import ProcessingError
 
 
 def analyze_portfolio_composition(
@@ -70,7 +70,8 @@ def analyze_portfolio_composition(
         # Optional percentile breakdown
         if by_percentile:
             if "fin" not in df.columns:
-                raise KeyError("Financial assets column 'fin' not found")
+                msg = "Financial assets column 'fin' not found"
+                raise KeyError(msg)
 
             df = df.copy()  # Avoid SettingWithCopyWarning
             df["wealth_percentile"] = pd.qcut(
@@ -86,7 +87,8 @@ def analyze_portfolio_composition(
         return result
 
     except Exception as e:
-        raise ProcessingError(f"Error analyzing portfolio composition: {e}")
+        msg = f"Error analyzing portfolio composition: {e}"
+        raise ProcessingError(msg)
 
 
 def analyze_debt_composition(
@@ -150,4 +152,5 @@ def analyze_debt_composition(
         return result
 
     except Exception as e:
-        raise ProcessingError(f"Error analyzing debt composition: {e}")
+        msg = f"Error analyzing debt composition: {e}"
+        raise ProcessingError(msg)

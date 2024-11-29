@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from ..exceptions import ProcessingError
+from fedsurvey.exceptions import ProcessingError
 
 
 def analyze_income_sources(
@@ -71,7 +71,8 @@ def analyze_income_sources(
         return result
 
     except Exception as e:
-        raise ProcessingError(f"Error analyzing income sources: {e}")
+        msg = f"Error analyzing income sources: {e}"
+        raise ProcessingError(msg)
 
 
 def analyze_income_mobility(
@@ -104,7 +105,8 @@ def analyze_income_mobility(
         end = df[df["year"] == end_year].copy()
 
         if len(base) == 0 or len(end) == 0:
-            raise ValueError(f"No data found for years {base_year} and/or {end_year}")
+            msg = f"No data found for years {base_year} and/or {end_year}"
+            raise ValueError(msg)
 
         # Create income quantiles
         base["income_group"] = pd.qcut(
@@ -129,13 +131,12 @@ def analyze_income_mobility(
 
         # Ensure all quantiles are represented
         all_labels = [f"Q{i+1}" for i in range(n_quantiles)]
-        transition = transition.reindex(
+        return transition.reindex(
             index=all_labels,
             columns=all_labels,
             fill_value=0,
         )
 
-        return transition
-
     except Exception as e:
-        raise ProcessingError(f"Error analyzing income mobility: {e}")
+        msg = f"Error analyzing income mobility: {e}"
+        raise ProcessingError(msg)

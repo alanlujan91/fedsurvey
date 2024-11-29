@@ -6,7 +6,7 @@ import pandas as pd
 from fedsurvey.scf.race import harmonize_race
 
 
-def test_post2004_race():
+def test_post2004_race() -> None:
     """Test post-2004 race/ethnicity harmonization."""
     df = pd.DataFrame(
         {
@@ -26,7 +26,7 @@ def test_post2004_race():
     assert list(result["race_4cat"]) == expected
 
 
-def test_pre2004_race():
+def test_pre2004_race() -> None:
     """Test pre-2004 race/ethnicity harmonization."""
     df = pd.DataFrame({"X6809": [1, 2, 3, 4, 5]})
 

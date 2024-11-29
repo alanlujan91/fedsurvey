@@ -23,16 +23,16 @@ def sample_analysis_data():
     )
 
 
-def test_percentile_calculation(sample_analysis_data):
+def test_percentile_calculation(sample_analysis_data) -> None:
     """Test percentile calculations."""
     result = calculate_percentiles(sample_analysis_data, "wealth", "wgt", [10, 50, 90])
 
     assert isinstance(result, dict)
-    assert all(0 <= p <= 100 for p in result.keys())
+    assert all(0 <= p <= 100 for p in result)
     assert result[10] < result[50] < result[90]
 
 
-def test_concentration_metrics(sample_analysis_data):
+def test_concentration_metrics(sample_analysis_data) -> None:
     """Test concentration metric calculations."""
     result = calculate_concentration(sample_analysis_data, "wealth", "wgt", [0.01, 0.1])
 
@@ -43,7 +43,7 @@ def test_concentration_metrics(sample_analysis_data):
     assert result["top_10"] > 0.4
 
 
-def test_invalid_inputs():
+def test_invalid_inputs() -> None:
     """Test handling of invalid inputs."""
     invalid_df = pd.DataFrame({"col1": [1, 2, 3]})
 

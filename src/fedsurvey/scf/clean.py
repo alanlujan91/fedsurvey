@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import TYPE_CHECKING
 
-import pandas as pd
+from fedsurvey.exceptions import ProcessingError
 
-from ..exceptions import ProcessingError
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 def harmonize_variables(df: pd.DataFrame, year: int) -> pd.DataFrame:
@@ -27,7 +28,8 @@ def harmonize_variables(df: pd.DataFrame, year: int) -> pd.DataFrame:
 
     """
     if year < 1989 or year > 2022:
-        raise ValueError(f"Invalid year: {year}. Must be between 1989 and 2022")
+        msg = f"Invalid year: {year}. Must be between 1989 and 2022"
+        raise ValueError(msg)
 
     # Map raw SCF variables to standardized names
     VARIABLE_MAP = {
@@ -67,12 +69,13 @@ def harmonize_variables(df: pd.DataFrame, year: int) -> pd.DataFrame:
         return df
 
     except Exception as e:
-        raise ProcessingError(f"Error harmonizing variables: {e}")
+        msg = f"Error harmonizing variables: {e}"
+        raise ProcessingError(msg)
 
 
 def adjust_for_inflation(
     df: pd.DataFrame,
-    monetary_cols: Optional[List[str]] = None,
+    monetary_cols: list[str] | None = None,
     base_year: int = 2022,
 ) -> pd.DataFrame:
     """Adjust monetary values for inflation using CPI-U-RS.
@@ -110,7 +113,8 @@ def adjust_for_inflation(
 
     try:
         if base_year not in CPI_DATA:
-            raise ValueError(f"No inflation data available for year {base_year}")
+            msg = f"No inflation data available for year {base_year}"
+            raise ValueError(msg)
 
         if monetary_cols is None:
             monetary_cols = ["income", "networth"]
@@ -118,7 +122,8 @@ def adjust_for_inflation(
         df = df.copy()
         for year in df["year"].unique():
             if year not in CPI_DATA:
-                raise ValueError(f"No inflation data available for year {year}")
+                msg = f"No inflation data available for year {year}"
+                raise ValueError(msg)
 
             factor = CPI_DATA[base_year] / CPI_DATA[year]
             mask = df["year"] == year
@@ -128,17 +133,18 @@ def adjust_for_inflation(
 
         return df
 
-    except ValueError as e:
+    except ValueError:
         # Re-raise ValueError directly for expected validation errors
-        raise e
+        raise
     except Exception as e:
-        raise ProcessingError(f"Error adjusting for inflation: {e}")
+        msg = f"Error adjusting for inflation: {e}"
+        raise ProcessingError(msg)
 
 
 def apply_weights(
     df: pd.DataFrame,
     weight_col: str = "wgt",
-    value_cols: Optional[List[str]] = None,
+    value_cols: list[str] | None = None,
 ) -> pd.DataFrame:
     """Apply survey weights to monetary values.
 
@@ -164,4 +170,5 @@ def apply_weights(
         return df
 
     except Exception as e:
-        raise ProcessingError(f"Error applying weights: {e}")
+        msg = f"Error applying weights: {e}"
+        raise ProcessingError(msg)

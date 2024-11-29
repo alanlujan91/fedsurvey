@@ -39,7 +39,7 @@ def sample_data():
     )
 
 
-def test_wealth_by_education(sample_data):
+def test_wealth_by_education(sample_data) -> None:
     """Test education wealth gap analysis."""
     result = wealth_by_education(sample_data)
 
@@ -54,7 +54,7 @@ def test_wealth_by_education(sample_data):
     assert np.allclose(result.mean(axis=1), 1.0, rtol=1e-10)  # Test normalization
 
 
-def test_racial_wealth_gap(sample_data):
+def test_racial_wealth_gap(sample_data) -> None:
     """Test racial wealth gap analysis."""
     result = racial_wealth_gap(sample_data, by_year=True)
 
@@ -66,7 +66,7 @@ def test_racial_wealth_gap(sample_data):
     assert all(result.values.flatten() > 0)
 
 
-def test_intersectional_wealth_gap(sample_data):
+def test_intersectional_wealth_gap(sample_data) -> None:
     """Test intersectional wealth gap analysis."""
     result = intersectional_wealth_gap(sample_data)
 

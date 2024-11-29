@@ -5,5 +5,5 @@ import importlib.metadata
 import fedsurvey as m
 
 
-def test_version():
+def test_version() -> None:
     assert importlib.metadata.version("fedsurvey") == m.__version__

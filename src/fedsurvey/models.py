@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, Field, NonNegativeInt
 
@@ -29,9 +28,9 @@ class SCFRecord(BaseModel):
     income: float = Field(..., ge=0)
     wealth: float
     weight: float = Field(..., gt=0)
-    age: Optional[int] = Field(None, ge=0, le=120)
-    education: Optional[str]
-    marital_status: Optional[str]
+    age: int | None = Field(None, ge=0, le=120)
+    education: str | None
+    marital_status: str | None
 
 
 class SCFMetadata(BaseModel):

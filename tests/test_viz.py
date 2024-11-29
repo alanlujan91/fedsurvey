@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-import matplotlib
+import matplotlib as mpl
 import numpy as np
 import pandas as pd
 import pytest
 
 # Use Agg backend to avoid Tcl/Tk issues
-matplotlib.use("Agg")
+mpl.use("Agg")
 
 import matplotlib.pyplot as plt
 from fedsurvey.viz import (

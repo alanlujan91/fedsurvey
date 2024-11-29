@@ -2,18 +2,16 @@
 
 from __future__ import annotations
 
-from typing import List, Optional
-
 import numpy as np
 import pandas as pd
 
-from ..exceptions import ProcessingError
+from fedsurvey.exceptions import ProcessingError
 
 
 def categorize_income(
     df: pd.DataFrame,
     income_col: str = "income",
-    bins: Optional[List[float]] = None,
+    bins: list[float] | None = None,
 ) -> pd.DataFrame:
     """Create income categories matching bulletin definitions.
 
@@ -38,7 +36,8 @@ def categorize_income(
         df["income_cat"] = pd.cut(df[income_col], bins=bins, labels=labels, right=False)
         return df
     except Exception as e:
-        raise ProcessingError(f"Error categorizing income: {e}")
+        msg = f"Error categorizing income: {e}"
+        raise ProcessingError(msg)
 
 
 def categorize_work_status(
@@ -85,4 +84,5 @@ def categorize_work_status(
         df["work_status"] = np.select(conditions, choices, default=np.nan)
         return df
     except Exception as e:
-        raise ProcessingError(f"Error categorizing work status: {e}")
+        msg = f"Error categorizing work status: {e}"
+        raise ProcessingError(msg)

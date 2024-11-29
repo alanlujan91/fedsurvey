@@ -24,7 +24,7 @@ def sample_emergency_data():
     )
 
 
-def test_emergency_response_analysis(sample_emergency_data):
+def test_emergency_response_analysis(sample_emergency_data) -> None:
     """Test emergency response analysis."""
     result = analyze_emergency_preparedness(sample_emergency_data)
 
@@ -43,7 +43,7 @@ def test_emergency_response_analysis(sample_emergency_data):
     )
 
 
-def test_borrowing_sources(sample_emergency_data):
+def test_borrowing_sources(sample_emergency_data) -> None:
     """Test borrowing source analysis."""
     result = analyze_emergency_preparedness(sample_emergency_data)
 
@@ -57,7 +57,7 @@ def test_borrowing_sources(sample_emergency_data):
     assert all(result[col].dtype == bool for col in borrowing_cols)
 
 
-def test_invalid_data():
+def test_invalid_data() -> None:
     """Test handling of invalid data."""
     invalid_df = pd.DataFrame({"col1": [1, 2, 3]})
 

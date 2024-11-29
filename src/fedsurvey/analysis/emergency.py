@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
-import pandas as pd
+from typing import TYPE_CHECKING
 
-from ..exceptions import ProcessingError
+from fedsurvey.exceptions import ProcessingError
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 
 def analyze_emergency_preparedness(df: pd.DataFrame) -> pd.DataFrame:
@@ -33,7 +36,8 @@ def analyze_emergency_preparedness(df: pd.DataFrame) -> pd.DataFrame:
         required_cols = ["X7775", "X7776", "X7777"]
         missing_cols = [col for col in required_cols if col not in df.columns]
         if missing_cols:
-            raise ProcessingError(f"Missing required columns: {missing_cols}")
+            msg = f"Missing required columns: {missing_cols}"
+            raise ProcessingError(msg)
 
         # How would handle $400 emergency expense
         response_map = {
@@ -61,6 +65,8 @@ def analyze_emergency_preparedness(df: pd.DataFrame) -> pd.DataFrame:
         return df
 
     except KeyError as e:
-        raise ProcessingError(f"Missing required column: {e}")
+        msg = f"Missing required column: {e}"
+        raise ProcessingError(msg)
     except Exception as e:
-        raise ProcessingError(f"Error analyzing emergency preparedness: {e}")
+        msg = f"Error analyzing emergency preparedness: {e}"
+        raise ProcessingError(msg)

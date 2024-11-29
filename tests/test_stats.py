@@ -7,7 +7,7 @@ import pytest
 from fedsurvey.utils.stats import weighted_mean, weighted_quantile, weighted_std
 
 
-def test_weighted_quantile():
+def test_weighted_quantile() -> None:
     """Test weighted quantile calculation."""
     values = np.array([1, 2, 3, 4, 5])
     weights = np.array([1, 1, 2, 1, 1])
@@ -22,7 +22,7 @@ def test_weighted_quantile():
     assert 3 < result <= 4
 
 
-def test_weighted_mean():
+def test_weighted_mean() -> None:
     """Test weighted mean calculation."""
     values = np.array([1, 2, 3, 4, 5])
     weights = np.array([1, 1, 2, 1, 1])
@@ -32,7 +32,7 @@ def test_weighted_mean():
     assert np.isclose(result, expected)
 
 
-def test_weighted_std():
+def test_weighted_std() -> None:
     """Test weighted standard deviation calculation."""
     values = np.array([1, 2, 3, 4, 5])
     weights = np.array([1, 1, 2, 1, 1])
@@ -45,7 +45,7 @@ def test_weighted_std():
     assert uniform_result > 0
 
 
-def test_edge_cases():
+def test_edge_cases() -> None:
     """Test edge cases for statistical functions."""
     # Single value
     assert weighted_quantile(np.array([1]), np.array([1]), 0.5) == 1
