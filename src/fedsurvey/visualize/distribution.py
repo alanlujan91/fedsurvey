@@ -11,9 +11,9 @@ mpl.use("Agg")  # Use Agg backend to avoid Tcl/Tk issues
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from fedsurvey.analysis.demographics import racial_wealth_gap
-from fedsurvey.analysis.trends import wealth_mobility
-from fedsurvey.analysis.wealth import detailed_wealth_composition, wealth_composition
+from fedsurvey.analyze.demographics import racial_wealth_gap
+from fedsurvey.analyze.trends import wealth_mobility
+from fedsurvey.analyze.wealth import detailed_wealth_composition, wealth_composition
 
 if TYPE_CHECKING:
     import pandas as pd

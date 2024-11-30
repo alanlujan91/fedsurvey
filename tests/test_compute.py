@@ -5,10 +5,11 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
+
 from fedsurvey.utils.compute import compute_means, compute_medians
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_compute_data():
     """Create sample data for computation tests."""
     np.random.seed(42)

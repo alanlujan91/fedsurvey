@@ -5,11 +5,12 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from fedsurvey.analysis.core import calculate_concentration, calculate_percentiles
-from fedsurvey.exceptions import ProcessingError
+
+from fedsurvey.analyze.core import calculate_concentration, calculate_percentiles
+from fedsurvey.core.exceptions import ProcessingError
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_analysis_data():
     """Create sample data for analysis testing."""
     np.random.seed(42)

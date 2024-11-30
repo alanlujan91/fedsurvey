@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pytest
+
 from fedsurvey.utils.plotting import weighted_relplot, wmean_lineplot, wmedian_lineplot
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_plot_data():
     """Create sample data for plotting tests."""
     np.random.seed(42)

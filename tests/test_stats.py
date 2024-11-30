@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 import pytest
+
 from fedsurvey.utils.stats import weighted_mean, weighted_quantile, weighted_std
 
 

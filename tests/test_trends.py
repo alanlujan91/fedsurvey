@@ -5,15 +5,16 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from fedsurvey.analysis.trends import (
+
+from fedsurvey.analyze.trends import (
     concentration_trends,
     mobility_analysis,
     wealth_growth_rates,
 )
-from fedsurvey.exceptions import ProcessingError
+from fedsurvey.core.exceptions import ProcessingError
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_trend_data():
     """Create sample data for trend analysis."""
     np.random.seed(42)

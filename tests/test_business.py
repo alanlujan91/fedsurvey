@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import pandas as pd
-from fedsurvey.analysis.business import (
+
+from fedsurvey.analyze.business import (
     analyze_business_ownership,
 )
 

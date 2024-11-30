@@ -5,10 +5,11 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
+
 from fedsurvey.scf.clean import adjust_for_inflation, apply_weights, harmonize_variables
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_raw_data() -> pd.DataFrame:
     """Create sample raw SCF data for testing."""
     np.random.seed(42)

@@ -5,7 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from fedsurvey.exceptions import ProcessingError
+from fedsurvey.core.exceptions import ProcessingError
 
 
 def analyze_portfolio_composition(

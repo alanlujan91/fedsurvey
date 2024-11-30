@@ -11,20 +11,21 @@ import pytest
 mpl.use("Agg")
 
 import matplotlib.pyplot as plt
-from fedsurvey.viz import (
+from matplotlib.figure import Figure
+
+from fedsurvey.visualize import (
     plot_lorenz_curve,
     plot_wealth_distribution,
 )
-from fedsurvey.viz.distribution import (
+from fedsurvey.visualize.distribution import (
     plot_racial_wealth_gap,
     plot_wealth_composition_by_percentile,
     plot_wealth_composition_trends,
     plot_wealth_mobility_heatmap,
 )
-from matplotlib.figure import Figure
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_viz_data() -> pd.DataFrame:
     """Create sample data for visualization testing."""
     np.random.seed(42)

@@ -5,14 +5,15 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from fedsurvey.analysis.portfolio import (
+
+from fedsurvey.analyze.portfolio import (
     analyze_debt_composition,
     analyze_portfolio_composition,
 )
-from fedsurvey.exceptions import ProcessingError
+from fedsurvey.core.exceptions import ProcessingError
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_portfolio_data():
     """Create sample portfolio data for testing."""
     np.random.seed(42)
@@ -49,7 +50,7 @@ def sample_portfolio_data():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_debt_data():
     """Create sample debt data for testing."""
     np.random.seed(42)

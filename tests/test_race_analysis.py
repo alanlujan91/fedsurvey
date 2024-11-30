@@ -5,11 +5,12 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from fedsurvey.exceptions import ProcessingError
+
+from fedsurvey.core.exceptions import ProcessingError
 from fedsurvey.scf.race import harmonize_race
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_race_data():
     """Create sample race/ethnicity data."""
     np.random.seed(42)

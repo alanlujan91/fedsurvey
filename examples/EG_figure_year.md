@@ -5,7 +5,7 @@ jupyter:
     text_representation:
       extension: .md
       format_name: markdown
-      format_version: '1.3'
+      format_version: "1.3"
       jupytext_version: 1.16.4
   kernelspec:
     display_name: hetretrwg
@@ -126,8 +126,7 @@ plt.show()
 ```
 
 ```python
-grouped_medians = filtered_df.groupby(
-    ["year", "race_lbl"]).apply(compute_medians)
+grouped_medians = filtered_df.groupby(["year", "race_lbl"]).apply(compute_medians)
 ```
 
 ```python

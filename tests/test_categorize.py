@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pandas as pd
+
 from fedsurvey.scf.categorize import categorize_income, categorize_work_status
 
 

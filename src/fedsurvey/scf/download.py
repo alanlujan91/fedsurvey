@@ -6,8 +6,8 @@ from pathlib import Path
 import requests
 from requests.exceptions import RequestException
 
-from fedsurvey.exceptions import DownloadError
-from fedsurvey.models import SCFMetadata
+from fedsurvey.core.exceptions import DownloadError
+from fedsurvey.core.models import SCFMetadata
 
 # Constants
 SCF_DATA_URL = "https://www.federalreserve.gov/econres/files/"

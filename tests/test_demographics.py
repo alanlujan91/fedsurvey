@@ -5,14 +5,15 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from fedsurvey.analysis.demographics import (
+
+from fedsurvey.analyze.demographics import (
     intersectional_wealth_gap,
     racial_wealth_gap,
     wealth_by_education,
 )
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_data():
     """Create sample demographic data for testing."""
     np.random.seed(42)

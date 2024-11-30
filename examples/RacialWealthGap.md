@@ -5,7 +5,7 @@ jupyter:
     text_representation:
       extension: .md
       format_name: markdown
-      format_version: '1.3'
+      format_version: "1.3"
       jupytext_version: 1.16.4
   kernelspec:
     display_name: hetretrwg
@@ -14,7 +14,6 @@ jupyter:
 ---
 
 # Racial Wealth Gap
-
 
 ```python
 import matplotlib.pyplot as plt
@@ -46,10 +45,7 @@ filtered_df = df[
 
 # The Racial Financial Wealth Gap
 
-
-
 ## Weighted Average Household Financial Assets by Race and Year
-
 
 ```python
 # | label: racial-wealth-gap
@@ -87,7 +83,6 @@ lineplot.legend(title="Race")
 
 ## Weighted Average Household Financial Assets by Education, Race, and Year
 
-
 ```python
 lineplot = weighted_relplot(
     data=filtered_df,
@@ -100,7 +95,6 @@ lineplot = weighted_relplot(
 ```
 
 ## Weighted Average Household Normalized Financial Assets by Race and Year
-
 
 ```python
 plt.title("Average Household Normalized Financial Assets by Race and Year")
@@ -120,7 +114,6 @@ plt.legend(title="Race")
 
 ## Weighted Average Household Normalized Financial Assets by Education, Race, and Year
 
-
 ```python
 lineplot = weighted_relplot(
     data=filtered_df,
@@ -134,10 +127,7 @@ lineplot = weighted_relplot(
 
 # Life Cycle Racial Financial Wealth Gap
 
-
-
 ## Weighted Average Household Financial Assets by Race and Age Group
-
 
 ```python
 lineplot = wmean_lineplot(
@@ -150,7 +140,6 @@ lineplot = wmean_lineplot(
 ```
 
 ## Weighted Average Household Financial Assets by Education, Race, and Age Group
-
 
 ```python
 lineplot = weighted_relplot(
@@ -165,7 +154,6 @@ lineplot = weighted_relplot(
 
 ## Weighted Average Household Normalized Financial Assets by Race and Age Group
 
-
 ```python
 lineplot = wmean_lineplot(
     data=filtered_df,
@@ -177,7 +165,6 @@ lineplot = wmean_lineplot(
 ```
 
 ## Weighted Average Household Normalized Financial Assets by Education, Race, and Age Group
-
 
 ```python
 lineplot = weighted_relplot(
@@ -192,10 +179,7 @@ lineplot = weighted_relplot(
 
 # Life Cycle Racial Participation Gap
 
-
-
 ## Weighted Household Participation by Race and Age Group
-
 
 ```python
 lineplot = wmean_lineplot(
@@ -208,7 +192,6 @@ lineplot = wmean_lineplot(
 ```
 
 ## Weighted Household Participation by Education, Race, and Age Group
-
 
 ```python
 lineplot = weighted_relplot(

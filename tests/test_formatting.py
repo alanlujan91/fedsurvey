@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
+from matplotlib.ticker import FuncFormatter
+
 from fedsurvey.utils.formatting import (
     billions_formatter,
     millions_formatter,
     thousands_formatter,
     trillions_formatter,
 )
-from matplotlib.ticker import FuncFormatter
 
 
 def test_thousands_formatter() -> None:

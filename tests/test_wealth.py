@@ -5,11 +5,12 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from fedsurvey.analysis.wealth import detailed_wealth_composition, wealth_composition
-from fedsurvey.exceptions import ProcessingError
+
+from fedsurvey.analyze.wealth import detailed_wealth_composition, wealth_composition
+from fedsurvey.core.exceptions import ProcessingError
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_wealth_data():
     """Create sample wealth data."""
     np.random.seed(42)

@@ -5,11 +5,12 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from fedsurvey.analysis.income import analyze_income_mobility, analyze_income_sources
-from fedsurvey.exceptions import ProcessingError
+
+from fedsurvey.analyze.income import analyze_income_mobility, analyze_income_sources
+from fedsurvey.core.exceptions import ProcessingError
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_income_data():
     """Create sample income data for testing."""
     np.random.seed(42)

@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-from fedsurvey.analysis.payments import analyze_payment_types, calculate_payment_ratios
+
+from fedsurvey.analyze.payments import analyze_payment_types, calculate_payment_ratios
 
 
 def test_payment_ratios() -> None:

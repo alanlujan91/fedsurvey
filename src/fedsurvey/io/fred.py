@@ -5,7 +5,7 @@ from __future__ import annotations
 import pandas as pd
 from fredapi import Fred
 
-from ..config import FRED_API_KEY
+from ..core.config import FRED_API_KEY
 
 
 class FREDData:

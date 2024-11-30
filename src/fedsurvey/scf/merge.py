@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING, Callable
 import numpy as np
 import pandas as pd
 
-from fedsurvey.config import CHUNK_SIZE, DATA_DIR, MAX_WORKERS
-from fedsurvey.models import SCFRecord
+from fedsurvey.core.config import CHUNK_SIZE, DATA_DIR, MAX_WORKERS
+from fedsurvey.core.models import SCFRecord
 
 if TYPE_CHECKING:
     from pathlib import Path

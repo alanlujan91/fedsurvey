@@ -5,7 +5,7 @@ jupyter:
     text_representation:
       extension: .md
       format_name: markdown
-      format_version: '1.3'
+      format_version: "1.3"
       jupytext_version: 1.16.4
   kernelspec:
     display_name: scf-tools
@@ -50,8 +50,6 @@ scf_data["fin_wssrinc"] = scf_data["fin"] / scf_data["wssrinc"]
 
 scf_data = scf_data.replace([np.inf, -np.inf], np.nan)
 ```
-
-
 
 ```python
 def compute_weighted_median(data, var, weights):

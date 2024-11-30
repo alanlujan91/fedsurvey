@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from fedsurvey.exceptions import ProcessingError
+from fedsurvey.core.exceptions import ProcessingError
 from fedsurvey.utils.stats import weighted_mean, weighted_quantile
 
 

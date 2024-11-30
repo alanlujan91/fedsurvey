@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from fedsurvey.exceptions import ProcessingError
+from fedsurvey.core.exceptions import ProcessingError
 
 if TYPE_CHECKING:
     import pandas as pd

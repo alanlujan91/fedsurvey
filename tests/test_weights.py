@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import pandas as pd
 import pytest
-from fedsurvey.exceptions import ProcessingError
+
+from fedsurvey.core.exceptions import ProcessingError
 from fedsurvey.utils.weights import adjust_influential_weights, apply_replicate_weights
 
 

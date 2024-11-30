@@ -5,11 +5,12 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from fedsurvey.analysis.literacy import calculate_finlit_score
-from fedsurvey.exceptions import ProcessingError
+
+from fedsurvey.analyze.literacy import calculate_finlit_score
+from fedsurvey.core.exceptions import ProcessingError
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_literacy_data():
     """Create sample financial literacy data."""
     np.random.seed(42)

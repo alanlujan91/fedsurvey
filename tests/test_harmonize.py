@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import pandas as pd
 import pytest
-from fedsurvey.exceptions import ProcessingError
+
+from fedsurvey.core.exceptions import ProcessingError
 from fedsurvey.scf.harmonize import harmonize_variables
 
 
-@pytest.fixture()
+@pytest.fixture
 def raw_scf_data():
     """Create sample raw SCF data."""
     return pd.DataFrame(

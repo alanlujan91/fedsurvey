@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import pytest
 import responses
-from fedsurvey.config import SCF_DATA_URL
+
+from fedsurvey.core.config import SCF_DATA_URL
 from fedsurvey.scf.download import DownloadError, save_year_zip
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_session():
     with responses.RequestsMock() as rsps:
         yield rsps

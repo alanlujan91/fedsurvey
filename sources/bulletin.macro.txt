@@ -13,7 +13,7 @@ LIBNAME WORKINGN 'directory for nominal dollar output data sets';
 
 * IMPORTANT NOTE: This program assumes the SCF datasets stored in
   the IN library are named P89I6, P92I4, P95I6, P98I6, P01I6, P04I6,
-  P07I6, P10I6, P13I6, P16I6, P19I6, and P22I6.  
+  P07I6, P10I6, P13I6, P16I6, P19I6, and P22I6.
   If you wish to use a different naming convention, you will
   need to change the ELSE %LET SCFDS= statements in the section of the
   program where the CPI adjustments are done.;
@@ -444,7 +444,7 @@ LIBNAME WORKINGN 'directory for nominal dollar output data sets';
 *   special adjustment for 2022 forward, need to undo the swapping of
     the race/ethnicity questions so that the constructed race variables
     use the race of the interview respondent, as in years prior to 2022,
-    only keep first two race questions responses in public data;    
+    only keep first two race questions responses in public data;
     %IF (&YEAR GE 2022) %THEN %DO;
       %IF (&PUBLIC EQ NO) %THEN %DO;
         IF X8000=1 THEN DO;
@@ -453,8 +453,8 @@ LIBNAME WORKINGN 'directory for nominal dollar output data sets';
           X6811=X8051;
           X6812=X8052;
           X6813=X8053;
-          X6814=X8054; 
-          X7004=X7404;        
+          X6814=X8054;
+          X7004=X7404;
         END;
       %END;
       %ELSE %IF (&PUBLIC EQ YES) %THEN %DO;
@@ -462,8 +462,8 @@ LIBNAME WORKINGN 'directory for nominal dollar output data sets';
           X6809=X8049;
           X6810=X8050;
           X7004=X7404;
-        END;          
-      %END;    
+        END;
+      %END;
     %END;
 
 *     racecl 1=white non-Hispanic, 2=nonwhite or Hispanic
@@ -501,7 +501,7 @@ LIBNAME WORKINGN 'directory for nominal dollar output data sets';
           4*(X6809 IN(4 -7) | X6810=1);
         RACECL5=1*(X6809=1 & X6810=5)+2*(X6809=2 & X6810=5)+3*(X6809=3 & X6810=5)+
           4*(X6809=4 & X6810=5)+5*(X6809=-7 | X6810=1);
-        RACECL_EX=1*(RACECL5=4)+2*(RACECL5=5)+99*(RACECL5 IN(1 2 3));        
+        RACECL_EX=1*(RACECL5=4)+2*(RACECL5=5)+99*(RACECL5 IN(1 2 3));
       %END;
 *     1=white non-Hispanic, 2=black/African-American, 3=Hispanic,
       4=Asian, 5=other;
@@ -595,7 +595,7 @@ LIBNAME WORKINGN 'directory for nominal dollar output data sets';
       RACECL=1+(X5909 ^= 5);
       RACECL4=1*(X5909=5)+2*(X5909=4)+3*(X5909=3)+4*(X5909<=2);
       IF RACECL4=4 THEN RACECL5=5;
-      ELSE RACECL5=RACECL4;      
+      ELSE RACECL5=RACECL4;
       IF X5909=5 THEN RACE=1;
       ELSE IF X5909=4 THEN RACE=2;
       ELSE IF X5909=3 THEN RACE=3;
@@ -1504,7 +1504,7 @@ LIBNAME WORKINGN 'directory for nominal dollar output data sets';
     %IF (&YEAR GE 2004) %THEN %DO;
       IRAKH=MAX(0,X6551)+MAX(0,X6559)+MAX(0,X6567)+MAX(0,X6552)+MAX(0,X6560)+
         MAX(0,X6568)+MAX(0,X6553)+MAX(0,X6561)+MAX(0,X6569)+
-        MAX(0,X6554)+MAX(0,X6562)+MAX(0,X6570); 
+        MAX(0,X6554)+MAX(0,X6562)+MAX(0,X6570);
     %END;
     %ELSE %DO;
       IRAKH=MAX(0,X3610)+MAX(0,X3620)+MAX(0,X3630);
@@ -2034,7 +2034,7 @@ LIBNAME WORKINGN 'directory for nominal dollar output data sets';
         SUM(0,MAX(0,X6559),MAX(0,X6560),MAX(0,X6561),MAX(0,X6562))*((X6563=1)
         +(X6563 IN(3 30))*(MAX(0,X6564)/10000))+
         SUM(0,MAX(0,X6567),MAX(0,X6568),MAX(0,X6569),MAX(0,X6570))*((X6571=1)
-        +(X6571 IN(3 30))*(MAX(0,X6572)/10000)))+ 
+        +(X6571 IN(3 30))*(MAX(0,X6572)/10000)))+
         PENEQ+(X6461=1)*X6462*((X6933=1)+(X6933 IN(3 30))*(MAX(0,X6934)/10000))+
         (X6466=1)*X6467*((X6937=1)+(X6937 IN(3 30))*(MAX(0,X6938)/10000))+
         (X6471=1)*X6472*((X6941=1)+(X6941 IN(3 30))*(MAX(0,X6942)/10000))+
@@ -2050,7 +2050,7 @@ LIBNAME WORKINGN 'directory for nominal dollar output data sets';
         SUM(0,MAX(0,X6559),MAX(0,X6560),MAX(0,X6561),MAX(0,X6562))*((X6563=1)
         +(X6563 IN(3))*(MAX(0,X6564)/10000))+
         SUM(0,MAX(0,X6567),MAX(0,X6568),MAX(0,X6569),MAX(0,X6570))*((X6571=1)
-        +(X6571 IN(3))*(MAX(0,X6572)/10000)))+  
+        +(X6571 IN(3))*(MAX(0,X6572)/10000)))+
         PENEQ+(X6461=1)*X6462*((X6933=1)+(X6933=3)*X6934/10000)+
         (X6466=1)*X6467*((X6937=1)+(X6937=3)*X6938/10000)+
         (X6471=1)*X6472*((X6941=1)+(X6941=3)*X6942/10000)+
@@ -4029,4 +4029,3 @@ LIBNAME WORKINGN 'directory for nominal dollar output data sets';
 ***************************************************************************;
 ***************************************************************************;
 ENDSAS;
-

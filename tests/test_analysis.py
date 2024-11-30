@@ -5,31 +5,32 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from fedsurvey.analysis import calculate_percentiles, gini_coefficient, wealth_shares
-from fedsurvey.analysis.demographics import (
+from matplotlib.figure import Figure
+
+from fedsurvey.analyze import calculate_percentiles, gini_coefficient, wealth_shares
+from fedsurvey.analyze.demographics import (
     intersectional_wealth_gap,
     racial_wealth_gap,
     wealth_by_education,
 )
-from fedsurvey.analysis.trends import (
+from fedsurvey.analyze.trends import (
     concentration_trends,
     mobility_analysis,
     wealth_growth_rates,
     wealth_mobility,
 )
-from fedsurvey.analysis.wealth import (
+from fedsurvey.analyze.wealth import (
     wealth_composition,
 )
-from fedsurvey.exceptions import ProcessingError
-from fedsurvey.viz.distribution import (
+from fedsurvey.core.exceptions import ProcessingError
+from fedsurvey.visualize.distribution import (
     plot_racial_wealth_gap,
     plot_wealth_composition_trends,
     plot_wealth_mobility_heatmap,
 )
-from matplotlib.figure import Figure
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_data() -> pd.DataFrame:
     """Create sample data for testing."""
     np.random.seed(42)
@@ -81,7 +82,7 @@ def sample_data() -> pd.DataFrame:
     return pd.concat(data, ignore_index=True)
 
 
-@pytest.fixture()
+@pytest.fixture
 def empty_data() -> pd.DataFrame:
     """Create empty DataFrame with correct columns."""
     return pd.DataFrame(

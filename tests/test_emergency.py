@@ -5,11 +5,12 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
-from fedsurvey.analysis.emergency import analyze_emergency_preparedness
-from fedsurvey.exceptions import ProcessingError
+
+from fedsurvey.analyze.emergency import analyze_emergency_preparedness
+from fedsurvey.core.exceptions import ProcessingError
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_emergency_data():
     """Create sample emergency savings data."""
     np.random.seed(42)
